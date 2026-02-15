@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>ระบบแจ้งปัญหาโรงเรียน</title>
-</head>
-<body>
-
 <div id="app"></div>
 
 <style>
@@ -105,12 +97,12 @@ th{
 </style>
 
 <script>
-
 const ADMIN_USERNAME = "AOMSIN";
 const ADMIN_PASSWORD = "451122";
 
 let currentUserPhone = "";
 
+// หน้าแรก
 function showHome(){
   document.getElementById("app").innerHTML = `
   <div class="container">
@@ -123,6 +115,7 @@ function showHome(){
   </div>`;
 }
 
+// ล็อกอินผู้ใช้
 function showUserLogin(){
   document.getElementById("app").innerHTML = `
   <div class="container">
@@ -142,6 +135,7 @@ function loginUser(){
   showUserDashboard();
 }
 
+// หน้าสถานะผู้ใช้
 function showUserDashboard(){
   let data = JSON.parse(localStorage.getItem("problems")) || [];
   let myProblems = data.filter(p=>p.phone===currentUserPhone);
@@ -156,21 +150,22 @@ function showUserDashboard(){
       let displayStatus="รอยืนยัน";
       let statusClass="status-pending";
 
-      if(item.status==="ยินยอม"){
-        displayStatus="ยินยอมแล้ว";
+      if(item.status==="อนุมัติ"){
+        displayStatus="อนุมัติแล้ว";
         statusClass="status-approved";
-      }else if(item.status==="ไม่ยินยอม"){
-        displayStatus="ไม่ยินยอม";
+      }
+      if(item.status==="ไม่อนุมัติ"){
+        displayStatus="ไม่อนุมัติ";
         statusClass="status-rejected";
       }
 
       rows+=`
-      <tr>
+      <tr class="${statusClass}">
         <td>${index+1}</td>
         <td>${item.fullname}</td>
         <td>${item.problem}</td>
         <td>${item.time}</td>
-        <td class="${statusClass}">${displayStatus}</td>
+        <td>${displayStatus}</td>
       </tr>`;
     });
   }
@@ -196,9 +191,156 @@ function showUserDashboard(){
   </div>`;
 }
 
+// ฟอร์มแจ้ง
+function showForm(){
+  document.getElementById("app").innerHTML=`
+  <div class="container">
+    <div class="glass">
+      <h2>แจ้งปัญหา</h2>
+      <input id="fullname" placeholder="ชื่อ - นามสกุล">
+      <input id="classroom" placeholder="ชั้น">
+      <input id="email" type="email" placeholder="อีเมล">
+      <textarea id="problem" placeholder="รายละเอียดปัญหา"></textarea>
+      <button class="blue" onclick="submitProblem()">ส่งปัญหา</button>
+      <button class="gray" onclick="showUserDashboard()">กลับ</button>
+    </div>
+  </div>`;
+}
+
+function submitProblem(){
+  let fullname=document.getElementById("fullname").value;
+  let classroom=document.getElementById("classroom").value;
+  let email=document.getElementById("email").value;
+  let problem=document.getElementById("problem").value;
+
+  if(!fullname || !classroom || !email || !problem){
+    alert("กรอกข้อมูลให้ครบก่อน");
+    return;
+  }
+
+  let data=JSON.parse(localStorage.getItem("problems"))||[];
+
+  data.push({
+    id:Date.now(),
+    phone:currentUserPhone,
+    fullname,
+    classroom,
+    email,
+    problem,
+    time:new Date().toLocaleString("th-TH"),
+    status:""
+  });
+
+  localStorage.setItem("problems",JSON.stringify(data));
+  showUserDashboard();
+}
+
+// แอดมิน
+function showAdminLogin(){
+  document.getElementById("app").innerHTML=`
+  <div class="container">
+    <div class="glass">
+      <h2>เข้าสู่ระบบสภานักเรียน</h2>
+      <input id="user" placeholder="ชื่อผู้ใช้">
+      <input id="pass" type="password" placeholder="รหัสผ่าน">
+      <button class="blue" onclick="adminLogin()">เข้าสู่ระบบ</button>
+      <button class="gray" onclick="showHome()">กลับ</button>
+      <p id="err" style="color:red;"></p>
+    </div>
+  </div>`;
+}
+
+function adminLogin(){
+  if(user.value===ADMIN_USERNAME && pass.value===ADMIN_PASSWORD){
+    showAdminDashboard();
+  }else{
+    document.getElementById("err").innerText="รหัสไม่ถูกต้อง";
+  }
+}
+
+function showAdminDashboard(){
+  let data=JSON.parse(localStorage.getItem("problems"))||[];
+
+  // เรียงลำดับ: ยังไม่กดก่อน
+  data.sort((a,b)=>{
+    if(!a.status && b.status) return -1;
+    if(a.status && !b.status) return 1;
+    return 0;
+  });
+
+  let rows="";
+
+  if(data.length===0){
+    rows=`<tr><td colspan="8">ไม่มีข้อมูล</td></tr>`;
+  }else{
+    data.forEach((item,index)=>{
+
+      let statusClass="";
+      let statusText="รอยืนยัน";
+
+      if(item.status==="อนุมัติ"){
+        statusClass="status-approved";
+        statusText="อนุมัติแล้ว";
+      }
+
+      if(item.status==="ไม่อนุมัติ"){
+        statusClass="status-rejected";
+        statusText="ไม่อนุมัติ";
+      }
+
+      if(!item.status){
+        statusClass="status-pending";
+      }
+
+      rows+=`
+      <tr class="${statusClass}">
+        <td>${index+1}</td>
+        <td>${item.phone}</td>
+        <td>${item.fullname}</td>
+        <td>${item.classroom}</td>
+        <td>${item.email}</td>
+        <td>${item.problem}</td>
+        <td>${statusText}</td>
+        <td>
+          <button class="green" onclick="updateStatus(${item.id},'อนุมัติ')">✔</button>
+          <button class="red" onclick="updateStatus(${item.id},'ไม่อนุมัติ')">✖</button>
+        </td>
+      </tr>`;
+    });
+  }
+
+  document.getElementById("app").innerHTML=`
+  <div class="container">
+    <div class="glass">
+      <h2>ระบบหลังบ้านสภานักเรียน</h2>
+      <table>
+        <tr>
+          <th>ลำดับ</th>
+          <th>เบอร์</th>
+          <th>ชื่อ</th>
+          <th>ชั้น</th>
+          <th>อีเมล</th>
+          <th>ปัญหา</th>
+          <th>สถานะ</th>
+          <th>จัดการ</th>
+        </tr>
+        ${rows}
+      </table>
+      <br>
+      <button class="gray" onclick="showHome()">ออกจากระบบ</button>
+    </div>
+  </div>`;
+}
+
+function updateStatus(id,status){
+  let data=JSON.parse(localStorage.getItem("problems"));
+  data=data.map(item=>{
+    if(item.id===id){ item.status=status; }
+    return item;
+  });
+  localStorage.setItem("problems",JSON.stringify(data));
+  showAdminDashboard();
+}
+
 showHome();
-
 </script>
-
-</body>
-</html>
