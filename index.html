@@ -2,139 +2,199 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Valentine</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<title>Final Graduation Memory</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 body{
   margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(180deg,#ffe6f0,#ffd6eb);
   font-family:'Poppins',sans-serif;
+  background:#f5f5f5;
 }
 
-.phone{
-  width:350px;
-  height:650px;
-  background:#fff7f2;
-  border-radius:30px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.2);
-  padding:30px;
+.page{
+  display:none;
+  padding:40px;
+  min-height:100vh;
+}
+
+.active{
+  display:block;
+}
+
+h1{
   text-align:center;
-  position:relative;
-  overflow:hidden;
 }
 
-h2{
-  margin-top:10px;
-  color:#444;
-}
-
-.bear{
-  font-size:120px;
-  margin:20px 0;
-  animation:float 3s ease-in-out infinite;
-}
-
-@keyframes float{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-10px);}
-}
-
-.question{
-  font-size:18px;
-  margin-bottom:20px;
-  color:#555;
-}
-
-.buttons{
-  position:relative;
-  height:60px;
+input, select, textarea{
+  padding:8px;
+  margin:5px 0;
+  width:100%;
+  border-radius:8px;
+  border:1px solid #ccc;
 }
 
 button{
   padding:10px 20px;
   border:none;
-  border-radius:10px;
-  font-size:16px;
+  border-radius:8px;
   cursor:pointer;
-  transition:0.2s;
-  position:absolute;
-}
-
-#yes{
-  background:#28c76f;
+  margin-top:10px;
+  background:#6c5ce7;
   color:white;
-  left:40px;
 }
 
-#no{
-  background:#ea5455;
-  color:white;
-  right:40px;
+.theme-pastel{background:linear-gradient(135deg,#ffd6e8,#d6f0ff);}
+.theme-galaxy{background:linear-gradient(135deg,#2c003e,#1b0031); color:white;}
+.theme-sunset{background:linear-gradient(135deg,#ff9966,#ff5e62);}
+.theme-mint{background:linear-gradient(135deg,#a8ff78,#78ffd6);}
+.theme-gold{background:linear-gradient(135deg,#d4af37,#fff5cc);}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:20px;
+  margin-top:30px;
 }
 
-.heart{
-  position:absolute;
+.card{
+  text-align:center;
+}
+
+.card img{
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.effect{
+  position:fixed;
   font-size:20px;
-  animation:rise 3s linear forwards;
+  animation:float 4s linear infinite;
 }
 
-@keyframes rise{
+@keyframes float{
   from{transform:translateY(0);opacity:1;}
-  to{transform:translateY(-200px);opacity:0;}
+  to{transform:translateY(-300px);opacity:0;}
 }
 </style>
 </head>
 <body>
 
-<div class="phone">
-  <h2>Valentines w Babeby 💕</h2>
-  <div class="bear">🧸</div>
-  <div class="question">Will you be my valentine?</div>
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+  <h1>🎓 สร้างเว็บปัจฉิมสุดหรู 🎓</h1>
 
-  <div class="buttons">
-    <button id="yes">Yes</button>
-    <button id="no">No</button>
-  </div>
+  <label>เลือกจำนวนคน (1-40)</label>
+  <input type="number" id="count" min="1" max="40" value="3">
+
+  <label>เลือกธีม</label>
+  <select id="theme">
+    <option value="theme-pastel">Pastel Dream</option>
+    <option value="theme-galaxy">Galaxy Night</option>
+    <option value="theme-sunset">Sunset Glow</option>
+    <option value="theme-mint">Mint Fresh</option>
+    <option value="theme-gold">Luxury Gold</option>
+  </select>
+
+  <label>เลือกอีโมจิประจำงาน</label>
+  <input type="text" id="emoji" value="✨">
+
+  <button onclick="generateForm()">สร้างฟอร์ม</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+  <h1>กรอกข้อมูลทุกคน</h1>
+  <div id="formArea"></div>
+  <label>ข้อความปัจฉิมรวม</label>
+  <textarea id="message"></textarea>
+  <button onclick="generateFinal()">สร้างหน้าปัจฉิม</button>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+  <h1 id="finalTitle"></h1>
+  <div id="finalGrid" class="grid"></div>
+  <h2 id="finalMessage"></h2>
+  <button onclick="backHome()">กลับหน้าแรก</button>
 </div>
 
 <script>
-let noBtn = document.getElementById("no");
-let yesBtn = document.getElementById("yes");
-let scale = 1;
+let total=0;
 
-noBtn.addEventListener("mouseover",()=>{
-  // ทำให้ปุ่ม No วิ่งหนี
-  let x = Math.random()*200 - 100;
-  let y = Math.random()*100 - 50;
-  noBtn.style.transform = `translate(${x}px,${y}px) scale(0.8)`;
+function generateForm(){
+  total=document.getElementById("count").value;
+  if(total<1) total=1;
+  if(total>40) total=40;
 
-  // ทำให้ Yes โตขึ้น
-  scale += 0.1;
-  yesBtn.style.transform = `scale(${scale})`;
-});
+  let formArea=document.getElementById("formArea");
+  formArea.innerHTML="";
 
-yesBtn.addEventListener("click",()=>{
-  document.querySelector(".phone").innerHTML=`
-    <div style="margin-top:200px;">
-      <h2 style="color:#ff4081;">YAYYYY 💖</h2>
-      <p>You are mine now 😚</p>
-    </div>
-  `;
+  for(let i=1;i<=total;i++){
+    formArea.innerHTML+=`
+      <h3>คนที่ ${i}</h3>
+      <input type="text" placeholder="ชื่อ" id="name${i}">
+      <input type="file" accept="image/*" id="img${i}">
+    `;
+  }
 
+  document.getElementById("page1").classList.remove("active");
+  document.getElementById("page2").classList.add("active");
+}
+
+function generateFinal(){
+  let theme=document.getElementById("theme").value;
+  let emoji=document.getElementById("emoji").value;
+
+  document.body.className=theme;
+
+  let grid=document.getElementById("finalGrid");
+  grid.innerHTML="";
+
+  for(let i=1;i<=total;i++){
+    let name=document.getElementById("name"+i).value;
+    let file=document.getElementById("img"+i).files[0];
+
+    if(file){
+      let reader=new FileReader();
+      reader.onload=function(e){
+        grid.innerHTML+=`
+          <div class="card">
+            <img src="${e.target.result}">
+            <p>${emoji} ${name}</p>
+          </div>
+        `;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  document.getElementById("finalTitle").innerText="Final Memory "+emoji;
+  document.getElementById("finalMessage").innerText=document.getElementById("message").value;
+
+  document.getElementById("page2").classList.remove("active");
+  document.getElementById("page3").classList.add("active");
+
+  startEffect(emoji);
+}
+
+function startEffect(symbol){
   setInterval(()=>{
-    let heart=document.createElement("div");
-    heart.className="heart";
-    heart.innerHTML="💗";
-    heart.style.left=Math.random()*300+"px";
-    heart.style.top="500px";
-    document.querySelector(".phone").appendChild(heart);
-    setTimeout(()=>heart.remove(),3000);
-  },200);
-});
+    let el=document.createElement("div");
+    el.className="effect";
+    el.innerHTML=symbol;
+    el.style.left=Math.random()*window.innerWidth+"px";
+    el.style.top=window.innerHeight+"px";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),4000);
+  },300);
+}
+
+function backHome(){
+  location.reload();
+}
 </script>
 
 </body>
