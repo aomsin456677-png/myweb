@@ -2,160 +2,140 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Survival Shooter</title>
+<title>3D Survival Shooter</title>
 <style>
-body{
-  margin:0;
-  overflow:hidden;
-  background:#111;
-  font-family:sans-serif;
-  color:white;
-}
+body { margin:0; overflow:hidden; }
 #ui{
   position:absolute;
   top:10px;
   left:10px;
-}
-canvas{
-  display:block;
+  color:white;
+  font-family:sans-serif;
 }
 </style>
 </head>
 <body>
 
 <div id="ui">
-  ❤️ HP: <span id="hp">100</span><br>
-  🏆 Score: <span id="score">0</span>
+❤️ HP: <span id="hp">100</span><br>
+🏆 Score: <span id="score">0</span>
 </div>
 
-<canvas id="game"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+let scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87ceeb);
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+let renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-let player = {
-  x: canvas.width/2,
-  y: canvas.height/2,
-  size: 20,
-  speed: 4,
-  hp: 100
-};
+// แสง
+let light = new THREE.DirectionalLight(0xffffff,1);
+light.position.set(5,10,7);
+scene.add(light);
 
-let keys = {};
-let bullets = [];
-let enemies = [];
+// พื้น
+let groundGeo = new THREE.PlaneGeometry(200,200);
+let groundMat = new THREE.MeshLambertMaterial({color:0x228B22});
+let ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI/2;
+scene.add(ground);
+
+// ต้นไม้
+for(let i=0;i<20;i++){
+  let trunk = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.5,0.5,3),
+    new THREE.MeshLambertMaterial({color:0x8B4513})
+  );
+  trunk.position.set(
+    (Math.random()-0.5)*100,
+    1.5,
+    (Math.random()-0.5)*100
+  );
+  scene.add(trunk);
+
+  let leaves = new THREE.Mesh(
+    new THREE.SphereGeometry(2),
+    new THREE.MeshLambertMaterial({color:0x006400})
+  );
+  leaves.position.set(trunk.position.x,4,trunk.position.z);
+  scene.add(leaves);
+}
+
+// ผู้เล่น
+camera.position.y = 2;
+let hp = 100;
 let score = 0;
 
-document.addEventListener("keydown", e => keys[e.key] = true);
-document.addEventListener("keyup", e => keys[e.key] = false);
+let keys = {};
+document.addEventListener("keydown",e=>keys[e.key]=true);
+document.addEventListener("keyup",e=>keys[e.key]=false);
 
-document.addEventListener("click", shoot);
-
-function shoot(e){
-  const angle = Math.atan2(
-    e.clientY - player.y,
-    e.clientX - player.x
-  );
-
-  bullets.push({
-    x: player.x,
-    y: player.y,
-    dx: Math.cos(angle)*8,
-    dy: Math.sin(angle)*8,
-    size:5
-  });
-}
+// ศัตรู
+let enemies = [];
 
 function spawnEnemy(){
-  const edge = Math.floor(Math.random()*4);
-  let x,y;
-
-  if(edge===0){ x=0; y=Math.random()*canvas.height;}
-  if(edge===1){ x=canvas.width; y=Math.random()*canvas.height;}
-  if(edge===2){ x=Math.random()*canvas.width; y=0;}
-  if(edge===3){ x=Math.random()*canvas.width; y=canvas.height;}
-
-  enemies.push({x,y,size:20,speed:1.5});
+  let enemy = new THREE.Mesh(
+    new THREE.BoxGeometry(2,2,2),
+    new THREE.MeshLambertMaterial({color:0xff0000})
+  );
+  enemy.position.set(
+    (Math.random()-0.5)*100,
+    1,
+    (Math.random()-0.5)*100
+  );
+  scene.add(enemy);
+  enemies.push(enemy);
 }
+setInterval(spawnEnemy,3000);
 
-setInterval(spawnEnemy,1500);
+// ยิง
+document.addEventListener("click", ()=>{
+  let raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(new THREE.Vector2(0,0),camera);
+  let intersects = raycaster.intersectObjects(enemies);
 
-function update(){
-  if(keys["w"]) player.y -= player.speed;
-  if(keys["s"]) player.y += player.speed;
-  if(keys["a"]) player.x -= player.speed;
-  if(keys["d"]) player.x += player.speed;
+  if(intersects.length>0){
+    scene.remove(intersects[0].object);
+    enemies.splice(enemies.indexOf(intersects[0].object),1);
+    score++;
+    document.getElementById("score").innerText=score;
+  }
+});
 
-  bullets.forEach((b,i)=>{
-    b.x+=b.dx;
-    b.y+=b.dy;
-  });
+// เกมลูป
+function animate(){
+  requestAnimationFrame(animate);
 
-  enemies.forEach((en,ei)=>{
-    const angle = Math.atan2(player.y-en.y, player.x-en.x);
-    en.x+=Math.cos(angle)*en.speed;
-    en.y+=Math.sin(angle)*en.speed;
+  // เดิน
+  if(keys["w"]) camera.position.z -= 0.5;
+  if(keys["s"]) camera.position.z += 0.5;
+  if(keys["a"]) camera.position.x -= 0.5;
+  if(keys["d"]) camera.position.x += 0.5;
 
-    // ชนผู้เล่น
-    const dist = Math.hypot(player.x-en.x, player.y-en.y);
-    if(dist < player.size){
-      player.hp -= 1;
-      document.getElementById("hp").innerText = player.hp;
-      if(player.hp<=0){
+  // ศัตรูเดินหาเรา
+  enemies.forEach(enemy=>{
+    let dir = new THREE.Vector3();
+    dir.subVectors(camera.position,enemy.position).normalize();
+    enemy.position.add(dir.multiplyScalar(0.1));
+
+    if(enemy.position.distanceTo(camera.position)<1.5){
+      hp -= 1;
+      document.getElementById("hp").innerText=hp;
+      if(hp<=0){
         alert("Game Over! Score: "+score);
         location.reload();
       }
     }
-
-    bullets.forEach((b,bi)=>{
-      const d = Math.hypot(b.x-en.x, b.y-en.y);
-      if(d < en.size){
-        enemies.splice(ei,1);
-        bullets.splice(bi,1);
-        score++;
-        document.getElementById("score").innerText = score;
-      }
-    });
-  });
-}
-
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  // player
-  ctx.fillStyle="cyan";
-  ctx.beginPath();
-  ctx.arc(player.x,player.y,player.size,0,Math.PI*2);
-  ctx.fill();
-
-  // bullets
-  ctx.fillStyle="yellow";
-  bullets.forEach(b=>{
-    ctx.beginPath();
-    ctx.arc(b.x,b.y,b.size,0,Math.PI*2);
-    ctx.fill();
   });
 
-  // enemies
-  ctx.fillStyle="red";
-  enemies.forEach(en=>{
-    ctx.beginPath();
-    ctx.arc(en.x,en.y,en.size,0,Math.PI*2);
-    ctx.fill();
-  });
+  renderer.render(scene,camera);
 }
 
-function gameLoop(){
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
-
-gameLoop();
+animate();
 </script>
 
 </body>
