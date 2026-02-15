@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>3D Survival Shooter</title>
+<title>3D Survival Battle</title>
 <style>
 body { margin:0; overflow:hidden; }
 #ui{
@@ -11,6 +11,19 @@ body { margin:0; overflow:hidden; }
   left:10px;
   color:white;
   font-family:sans-serif;
+  z-index:10;
+}
+#crosshair{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:20px;
+  height:20px;
+  margin-left:-10px;
+  margin-top:-10px;
+  border:2px solid white;
+  border-radius:50%;
+  z-index:10;
 }
 </style>
 </head>
@@ -20,6 +33,8 @@ body { margin:0; overflow:hidden; }
 ❤️ HP: <span id="hp">100</span><br>
 🏆 Score: <span id="score">0</span>
 </div>
+
+<div id="crosshair"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
@@ -32,41 +47,45 @@ let renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// แสง
+// Light
 let light = new THREE.DirectionalLight(0xffffff,1);
-light.position.set(5,10,7);
+light.position.set(10,20,10);
 scene.add(light);
 
-// พื้น
-let groundGeo = new THREE.PlaneGeometry(200,200);
-let groundMat = new THREE.MeshLambertMaterial({color:0x228B22});
-let ground = new THREE.Mesh(groundGeo, groundMat);
+// Ground
+let ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(300,300),
+  new THREE.MeshLambertMaterial({color:0x2e8b57})
+);
 ground.rotation.x = -Math.PI/2;
 scene.add(ground);
 
-// ต้นไม้
-for(let i=0;i<20;i++){
-  let trunk = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.5,0.5,3),
-    new THREE.MeshLambertMaterial({color:0x8B4513})
-  );
-  trunk.position.set(
-    (Math.random()-0.5)*100,
-    1.5,
-    (Math.random()-0.5)*100
-  );
-  scene.add(trunk);
+// House
+let house = new THREE.Mesh(
+  new THREE.BoxGeometry(10,6,10),
+  new THREE.MeshLambertMaterial({color:0x8b4513})
+);
+house.position.set(20,3,-20);
+scene.add(house);
 
-  let leaves = new THREE.Mesh(
-    new THREE.SphereGeometry(2),
-    new THREE.MeshLambertMaterial({color:0x006400})
+// Trees
+let obstacles = [];
+for(let i=0;i<25;i++){
+  let tree = new THREE.Mesh(
+    new THREE.CylinderGeometry(1,1,5),
+    new THREE.MeshLambertMaterial({color:0x654321})
   );
-  leaves.position.set(trunk.position.x,4,trunk.position.z);
-  scene.add(leaves);
+  tree.position.set(
+    (Math.random()-0.5)*200,
+    2.5,
+    (Math.random()-0.5)*200
+  );
+  scene.add(tree);
+  obstacles.push(tree);
 }
 
-// ผู้เล่น
-camera.position.y = 2;
+// Player
+camera.position.set(0,2,0);
 let hp = 100;
 let score = 0;
 
@@ -74,49 +93,49 @@ let keys = {};
 document.addEventListener("keydown",e=>keys[e.key]=true);
 document.addEventListener("keyup",e=>keys[e.key]=false);
 
-// ศัตรู
+// Enemies
 let enemies = [];
-
 function spawnEnemy(){
   let enemy = new THREE.Mesh(
     new THREE.BoxGeometry(2,2,2),
     new THREE.MeshLambertMaterial({color:0xff0000})
   );
   enemy.position.set(
-    (Math.random()-0.5)*100,
+    (Math.random()-0.5)*200,
     1,
-    (Math.random()-0.5)*100
+    (Math.random()-0.5)*200
   );
   scene.add(enemy);
   enemies.push(enemy);
 }
-setInterval(spawnEnemy,3000);
+setInterval(spawnEnemy,4000);
 
-// ยิง
+// Shooting
 document.addEventListener("click", ()=>{
   let raycaster = new THREE.Raycaster();
   raycaster.setFromCamera(new THREE.Vector2(0,0),camera);
   let intersects = raycaster.intersectObjects(enemies);
 
   if(intersects.length>0){
-    scene.remove(intersects[0].object);
-    enemies.splice(enemies.indexOf(intersects[0].object),1);
+    let hit = intersects[0].object;
+    scene.remove(hit);
+    enemies.splice(enemies.indexOf(hit),1);
     score++;
     document.getElementById("score").innerText=score;
   }
 });
 
-// เกมลูป
+// Game loop
 function animate(){
   requestAnimationFrame(animate);
 
-  // เดิน
-  if(keys["w"]) camera.position.z -= 0.5;
-  if(keys["s"]) camera.position.z += 0.5;
-  if(keys["a"]) camera.position.x -= 0.5;
-  if(keys["d"]) camera.position.x += 0.5;
+  let speed = 0.5;
 
-  // ศัตรูเดินหาเรา
+  if(keys["w"]) camera.position.z -= speed;
+  if(keys["s"]) camera.position.z += speed;
+  if(keys["a"]) camera.position.x -= speed;
+  if(keys["d"]) camera.position.x += speed;
+
   enemies.forEach(enemy=>{
     let dir = new THREE.Vector3();
     dir.subVectors(camera.position,enemy.position).normalize();
@@ -134,7 +153,6 @@ function animate(){
 
   renderer.render(scene,camera);
 }
-
 animate();
 </script>
 
