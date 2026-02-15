@@ -2,7 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Love Trap</title>
+<title>Valentine</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
 body{
   margin:0;
@@ -10,60 +11,78 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background:linear-gradient(135deg,#1a001f,#330033);
-  font-family:sans-serif;
+  background:linear-gradient(180deg,#ffe6f0,#ffd6eb);
+  font-family:'Poppins',sans-serif;
+}
+
+.phone{
+  width:350px;
+  height:650px;
+  background:#fff7f2;
+  border-radius:30px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.2);
+  padding:30px;
+  text-align:center;
+  position:relative;
   overflow:hidden;
 }
 
-.card{
-  background:#2b002b;
-  padding:40px;
-  border-radius:20px;
-  text-align:center;
-  box-shadow:0 0 30px hotpink;
-  position:relative;
+h2{
+  margin-top:10px;
+  color:#444;
 }
 
-h1{
-  color:#ff66cc;
+.bear{
+  font-size:120px;
+  margin:20px 0;
+  animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+}
+
+.question{
+  font-size:18px;
+  margin-bottom:20px;
+  color:#555;
 }
 
 .buttons{
-  margin-top:20px;
   position:relative;
-  height:100px;
+  height:60px;
 }
 
 button{
+  padding:10px 20px;
   border:none;
-  border-radius:12px;
-  padding:15px 30px;
-  font-size:20px;
+  border-radius:10px;
+  font-size:16px;
   cursor:pointer;
-  position:absolute;
   transition:0.2s;
+  position:absolute;
 }
 
 #yes{
-  background:#00ff88;
-  color:black;
-  left:20%;
+  background:#28c76f;
+  color:white;
+  left:40px;
 }
 
 #no{
-  background:#ff0033;
+  background:#ea5455;
   color:white;
-  right:20%;
+  right:40px;
 }
 
 .heart{
   position:absolute;
-  color:pink;
   font-size:20px;
-  animation:float 3s linear infinite;
+  animation:rise 3s linear forwards;
 }
 
-@keyframes float{
+@keyframes rise{
   from{transform:translateY(0);opacity:1;}
   to{transform:translateY(-200px);opacity:0;}
 }
@@ -71,65 +90,48 @@ button{
 </head>
 <body>
 
-<div class="card">
-  <h1>รักเค้ามั้ยยย 💕</h1>
+<div class="phone">
+  <h2>Valentines w Babeby 💕</h2>
+  <div class="bear">🧸</div>
+  <div class="question">Will you be my valentine?</div>
+
   <div class="buttons">
-    <button id="yes">LOVE 💚</button>
-    <button id="no">NO 💔</button>
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
   </div>
 </div>
 
 <script>
 let noBtn = document.getElementById("no");
 let yesBtn = document.getElementById("yes");
+let scale = 1;
 
-let noSize = 1;
-let yesSize = 1;
+noBtn.addEventListener("mouseover",()=>{
+  // ทำให้ปุ่ม No วิ่งหนี
+  let x = Math.random()*200 - 100;
+  let y = Math.random()*100 - 50;
+  noBtn.style.transform = `translate(${x}px,${y}px) scale(0.8)`;
 
-noBtn.addEventListener("mouseover", ()=>{
-  // ทำให้ปุ่ม NO เล็กลง
-  noSize -= 0.1;
-  if(noSize < 0.2) noSize = 0.2;
-  noBtn.style.transform = "scale("+noSize+")";
-
-  // ทำให้มันวิ่งหนี
-  let x = Math.random()*300 - 150;
-  let y = Math.random()*200 - 100;
-  noBtn.style.transform += " translate("+x+"px,"+y+"px)";
-
-  // ทำให้ LOVE โตขึ้น
-  yesSize += 0.1;
-  yesBtn.style.transform = "scale("+yesSize+")";
+  // ทำให้ Yes โตขึ้น
+  scale += 0.1;
+  yesBtn.style.transform = `scale(${scale})`;
 });
 
-yesBtn.addEventListener("click", ()=>{
-  document.body.innerHTML = `
-    <div style="
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      flex-direction:column;
-      background:linear-gradient(135deg,#ff00cc,#660066);
-      color:white;
-      font-size:40px;
-      text-align:center;
-    ">
-      💖 รู้แล้วว่ารัก 💖
-      <br>
-      🥰 น่ารักที่สุดเลย
+yesBtn.addEventListener("click",()=>{
+  document.querySelector(".phone").innerHTML=`
+    <div style="margin-top:200px;">
+      <h2 style="color:#ff4081;">YAYYYY 💖</h2>
+      <p>You are mine now 😚</p>
     </div>
   `;
 
-  // หัวใจลอย
   setInterval(()=>{
-    let heart = document.createElement("div");
+    let heart=document.createElement("div");
     heart.className="heart";
-    heart.innerHTML="💖";
-    heart.style.left=Math.random()*window.innerWidth+"px";
-    heart.style.top=window.innerHeight+"px";
-    document.body.appendChild(heart);
-
+    heart.innerHTML="💗";
+    heart.style.left=Math.random()*300+"px";
+    heart.style.top="500px";
+    document.querySelector(".phone").appendChild(heart);
     setTimeout(()=>heart.remove(),3000);
   },200);
 });
