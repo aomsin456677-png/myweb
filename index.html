@@ -2,167 +2,73 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>iPad Smart Notebook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ชัญญ์ญาณ์บ้า</title>
 
 <style>
-body{
-margin:0;
-overflow:hidden;
-font-family:Arial;
-background:#f5f5f5;
-}
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-family: "Arial Black", sans-serif;
+        background: linear-gradient(135deg, #ff00cc, #3333ff, #00ffcc);
+        background-size: 400% 400%;
+        animation: gradientMove 8s ease infinite;
+        overflow: hidden;
+    }
 
-#toolbar{
-position:fixed;
-top:0;
-left:0;
-right:0;
-height:60px;
-background:white;
-display:flex;
-align-items:center;
-gap:10px;
-padding:10px;
-box-shadow:0 2px 5px rgba(0,0,0,0.2);
-z-index:10;
-}
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 
-button{
-padding:8px 12px;
-border:none;
-border-radius:8px;
-background:#4f46e5;
-color:white;
-font-size:14px;
-}
+    h1 {
+        font-size: 100px;
+        color: white;
+        text-shadow: 5px 5px 20px rgba(0,0,0,0.6);
+        animation: bounce 1.5s infinite alternate;
+    }
 
-input[type="color"],
-input[type="range"],
-select{
-height:35px;
-}
+    @keyframes bounce {
+        from { transform: scale(1); }
+        to { transform: scale(1.1); }
+    }
 
-canvas{
-position:absolute;
-top:60px;
-left:0;
-}
+    .emoji {
+        position: absolute;
+        font-size: 40px;
+        animation: float 6s linear infinite;
+    }
+
+    @keyframes float {
+        from { transform: translateY(100vh); }
+        to { transform: translateY(-10vh); }
+    }
 </style>
 </head>
+
 <body>
 
-<div id="toolbar">
-<input type="color" id="colorPicker" value="#000000">
-<input type="range" id="size" min="1" max="20" value="3">
-<button onclick="setMode('draw')">✏ ปากกา</button>
-<button onclick="setMode('erase')">🧽 ยางลบ</button>
-<button onclick="clearCanvas()">🗑 ล้าง</button>
-<button onclick="saveImage()">💾 บันทึก</button>
-<select id="paperType" onchange="changePaper()">
-<option value="plain">กระดาษเปล่า</option>
-<option value="line">กระดาษเส้น</option>
-<option value="grid">กระดาษตาราง</option>
-</select>
-</div>
-
-<canvas id="canvas"></canvas>
+<h1>
+    💊✨🔥 ชัญญ์ญาณ์บ้า 🔥✨💊
+</h1>
 
 <script>
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-let drawing = false;
-let mode = "draw";
-
-function resizeCanvas(){
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight - 60;
-changePaper();
-}
-resizeCanvas();
-window.onresize = resizeCanvas;
-
-canvas.addEventListener("pointerdown", e=>{
-drawing = true;
-draw(e);
-});
-canvas.addEventListener("pointermove", draw);
-canvas.addEventListener("pointerup", ()=>drawing=false);
-canvas.addEventListener("pointerout", ()=>drawing=false);
-
-function draw(e){
-if(!drawing) return;
-
-let rect = canvas.getBoundingClientRect();
-let x = e.clientX - rect.left;
-let y = e.clientY - rect.top;
-
-ctx.lineCap = "round";
-ctx.lineJoin = "round";
-
-if(mode === "erase"){
-ctx.globalCompositeOperation = "destination-out";
-ctx.lineWidth = 20;
-}else{
-ctx.globalCompositeOperation = "source-over";
-ctx.strokeStyle = document.getElementById("colorPicker").value;
-ctx.lineWidth = document.getElementById("size").value * (e.pressure || 1);
-}
-
-ctx.lineTo(x,y);
-ctx.stroke();
-ctx.beginPath();
-ctx.moveTo(x,y);
-}
-
-function setMode(m){
-mode = m;
-}
-
-function clearCanvas(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-changePaper();
-}
-
-function saveImage(){
-let link = document.createElement("a");
-link.download = "โน้ต.png";
-link.href = canvas.toDataURL();
-link.click();
-}
-
-function changePaper(){
-let type = document.getElementById("paperType").value;
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-if(type === "line"){
-ctx.strokeStyle = "#ddd";
-for(let i=20;i<canvas.height;i+=30){
-ctx.beginPath();
-ctx.moveTo(0,i);
-ctx.lineTo(canvas.width,i);
-ctx.stroke();
-}
-}
-
-if(type === "grid"){
-ctx.strokeStyle = "#eee";
-for(let i=20;i<canvas.height;i+=25){
-ctx.beginPath();
-ctx.moveTo(0,i);
-ctx.lineTo(canvas.width,i);
-ctx.stroke();
-}
-for(let j=20;j<canvas.width;j+=25){
-ctx.beginPath();
-ctx.moveTo(j,0);
-ctx.lineTo(j,canvas.height);
-ctx.stroke();
-}
-}
-}
-
+    const emojis = ["💊","🔥","✨","💎","🌈","⭐","⚡","🎉"];
+    
+    for(let i = 0; i < 40; i++){
+        let span = document.createElement("span");
+        span.className = "emoji";
+        span.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+        span.style.left = Math.random()*100 + "vw";
+        span.style.animationDuration = (3 + Math.random()*5) + "s";
+        span.style.fontSize = (20 + Math.random()*40) + "px";
+        document.body.appendChild(span);
+    }
 </script>
 
 </body>
