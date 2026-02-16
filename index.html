@@ -2,198 +2,237 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Final Graduation Memory</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<title>Grand Graduation Luxury</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
+:root{
+--gold:linear-gradient(135deg,#d4af37,#fff0b3);
+--glass:rgba(255,255,255,0.15);
+}
+
 body{
-  margin:0;
-  font-family:'Poppins',sans-serif;
-  background:#f5f5f5;
+margin:0;
+font-family:'Poppins',sans-serif;
+overflow-x:hidden;
+background:#0f0f1a;
+color:white;
+}
+
+/* Aurora Background */
+body::before{
+content:"";
+position:fixed;
+width:200%;
+height:200%;
+background:radial-gradient(circle at 30% 40%,#3a0ca3,transparent 40%),
+radial-gradient(circle at 70% 60%,#7209b7,transparent 40%),
+radial-gradient(circle at 50% 80%,#560bad,transparent 40%);
+animation:moveBg 15s infinite alternate;
+z-index:-1;
+}
+
+@keyframes moveBg{
+from{transform:translate(-10%,-10%);}
+to{transform:translate(10%,10%);}
 }
 
 .page{
-  display:none;
-  padding:40px;
-  min-height:100vh;
+display:none;
+min-height:100vh;
+padding:60px;
+transition:0.6s;
 }
 
-.active{
-  display:block;
+.active{display:block;}
+
+.glass{
+background:var(--glass);
+backdrop-filter:blur(20px);
+border-radius:25px;
+padding:40px;
+box-shadow:0 20px 60px rgba(0,0,0,0.4);
 }
 
 h1{
-  text-align:center;
+font-family:'Playfair Display',serif;
+font-size:40px;
+background:var(--gold);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+text-align:center;
+margin-bottom:30px;
 }
 
 input, select, textarea{
-  padding:8px;
-  margin:5px 0;
-  width:100%;
-  border-radius:8px;
-  border:1px solid #ccc;
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:12px;
+border:none;
+background:rgba(255,255,255,0.2);
+color:white;
 }
 
 button{
-  padding:10px 20px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  margin-top:10px;
-  background:#6c5ce7;
-  color:white;
+padding:12px 25px;
+border:none;
+border-radius:30px;
+background:var(--gold);
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
 }
 
-.theme-pastel{background:linear-gradient(135deg,#ffd6e8,#d6f0ff);}
-.theme-galaxy{background:linear-gradient(135deg,#2c003e,#1b0031); color:white;}
-.theme-sunset{background:linear-gradient(135deg,#ff9966,#ff5e62);}
-.theme-mint{background:linear-gradient(135deg,#a8ff78,#78ffd6);}
-.theme-gold{background:linear-gradient(135deg,#d4af37,#fff5cc);}
+button:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px gold;
+}
 
 .grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-  gap:20px;
-  margin-top:30px;
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:25px;
+margin-top:40px;
 }
 
 .card{
-  text-align:center;
+background:rgba(255,255,255,0.1);
+border-radius:20px;
+overflow:hidden;
+text-align:center;
+padding-bottom:15px;
+transition:0.4s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+box-shadow:0 0 25px gold;
 }
 
 .card img{
-  width:100%;
-  height:120px;
-  object-fit:cover;
-  border-radius:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+width:100%;
+height:200px;
+object-fit:cover;
 }
 
-.effect{
-  position:fixed;
-  font-size:20px;
-  animation:float 4s linear infinite;
+.sparkle{
+position:fixed;
+font-size:18px;
+animation:float 5s linear infinite;
 }
 
 @keyframes float{
-  from{transform:translateY(0);opacity:1;}
-  to{transform:translateY(-300px);opacity:0;}
+from{transform:translateY(0);opacity:1;}
+to{transform:translateY(-400px);opacity:0;}
 }
 </style>
 </head>
+
 <body>
 
 <!-- PAGE 1 -->
 <div id="page1" class="page active">
-  <h1>🎓 สร้างเว็บปัจฉิมสุดหรู 🎓</h1>
+<div class="glass">
+<h1>Grand Graduation Experience</h1>
 
-  <label>เลือกจำนวนคน (1-40)</label>
-  <input type="number" id="count" min="1" max="40" value="3">
+<label>Number of People (1-40)</label>
+<input type="number" id="count" min="1" max="40" value="5">
 
-  <label>เลือกธีม</label>
-  <select id="theme">
-    <option value="theme-pastel">Pastel Dream</option>
-    <option value="theme-galaxy">Galaxy Night</option>
-    <option value="theme-sunset">Sunset Glow</option>
-    <option value="theme-mint">Mint Fresh</option>
-    <option value="theme-gold">Luxury Gold</option>
-  </select>
+<label>Theme Mood</label>
+<select id="emoji">
+<option value="✨">Elegant</option>
+<option value="👑">Royal</option>
+<option value="💎">Luxury</option>
+<option value="🌟">Modern</option>
+</select>
 
-  <label>เลือกอีโมจิประจำงาน</label>
-  <input type="text" id="emoji" value="✨">
-
-  <button onclick="generateForm()">สร้างฟอร์ม</button>
+<button onclick="goForm()">Continue</button>
+</div>
 </div>
 
 <!-- PAGE 2 -->
 <div id="page2" class="page">
-  <h1>กรอกข้อมูลทุกคน</h1>
-  <div id="formArea"></div>
-  <label>ข้อความปัจฉิมรวม</label>
-  <textarea id="message"></textarea>
-  <button onclick="generateFinal()">สร้างหน้าปัจฉิม</button>
+<div class="glass">
+<h1>Executive Information Panel</h1>
+<div id="formArea"></div>
+<label>Final Message</label>
+<textarea id="message"></textarea>
+<button onclick="showFinal()">Create Showcase</button>
+</div>
 </div>
 
 <!-- PAGE 3 -->
 <div id="page3" class="page">
-  <h1 id="finalTitle"></h1>
-  <div id="finalGrid" class="grid"></div>
-  <h2 id="finalMessage"></h2>
-  <button onclick="backHome()">กลับหน้าแรก</button>
+<h1 id="finalTitle"></h1>
+<div id="finalGrid" class="grid"></div>
+<h2 id="finalMessage" style="text-align:center;margin-top:40px;"></h2>
+<button onclick="location.reload()">Restart</button>
 </div>
 
 <script>
 let total=0;
 
-function generateForm(){
-  total=document.getElementById("count").value;
-  if(total<1) total=1;
-  if(total>40) total=40;
-
-  let formArea=document.getElementById("formArea");
-  formArea.innerHTML="";
-
-  for(let i=1;i<=total;i++){
-    formArea.innerHTML+=`
-      <h3>คนที่ ${i}</h3>
-      <input type="text" placeholder="ชื่อ" id="name${i}">
-      <input type="file" accept="image/*" id="img${i}">
-    `;
-  }
-
-  document.getElementById("page1").classList.remove("active");
-  document.getElementById("page2").classList.add("active");
+function goForm(){
+total=document.getElementById("count").value;
+if(total>40) total=40;
+let area=document.getElementById("formArea");
+area.innerHTML="";
+for(let i=1;i<=total;i++){
+area.innerHTML+=`
+<h3>Person ${i}</h3>
+<input type="text" id="name${i}" placeholder="Full Name">
+<input type="file" accept="image/*" id="img${i}">
+`;
+}
+switchPage(1,2);
 }
 
-function generateFinal(){
-  let theme=document.getElementById("theme").value;
-  let emoji=document.getElementById("emoji").value;
+function showFinal(){
+let grid=document.getElementById("finalGrid");
+grid.innerHTML="";
+let emoji=document.getElementById("emoji").value;
 
-  document.body.className=theme;
-
-  let grid=document.getElementById("finalGrid");
-  grid.innerHTML="";
-
-  for(let i=1;i<=total;i++){
-    let name=document.getElementById("name"+i).value;
-    let file=document.getElementById("img"+i).files[0];
-
-    if(file){
-      let reader=new FileReader();
-      reader.onload=function(e){
-        grid.innerHTML+=`
-          <div class="card">
-            <img src="${e.target.result}">
-            <p>${emoji} ${name}</p>
-          </div>
-        `;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  document.getElementById("finalTitle").innerText="Final Memory "+emoji;
-  document.getElementById("finalMessage").innerText=document.getElementById("message").value;
-
-  document.getElementById("page2").classList.remove("active");
-  document.getElementById("page3").classList.add("active");
-
-  startEffect(emoji);
+for(let i=1;i<=total;i++){
+let name=document.getElementById("name"+i).value;
+let file=document.getElementById("img"+i).files[0];
+if(file){
+let reader=new FileReader();
+reader.onload=function(e){
+grid.innerHTML+=`
+<div class="card">
+<img src="${e.target.result}">
+<p>${emoji} ${name}</p>
+</div>
+`;
+}
+reader.readAsDataURL(file);
+}
 }
 
-function startEffect(symbol){
-  setInterval(()=>{
-    let el=document.createElement("div");
-    el.className="effect";
-    el.innerHTML=symbol;
-    el.style.left=Math.random()*window.innerWidth+"px";
-    el.style.top=window.innerHeight+"px";
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(),4000);
-  },300);
+document.getElementById("finalTitle").innerText="National Graduation Showcase";
+document.getElementById("finalMessage").innerText=document.getElementById("message").value;
+
+switchPage(2,3);
+sparkleEffect();
 }
 
-function backHome(){
-  location.reload();
+function switchPage(from,to){
+document.getElementById("page"+from).classList.remove("active");
+document.getElementById("page"+to).classList.add("active");
+}
+
+function sparkleEffect(){
+setInterval(()=>{
+let s=document.createElement("div");
+s.className="sparkle";
+s.innerHTML="✨";
+s.style.left=Math.random()*window.innerWidth+"px";
+s.style.top=window.innerHeight+"px";
+document.body.appendChild(s);
+setTimeout(()=>s.remove(),5000);
+},400);
 }
 </script>
 
