@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>iPad Smart Notebook</title>
+<title>GoodNotes Web Pro</title>
 
 <style>
 body{
 margin:0;
 overflow:hidden;
 font-family:Arial;
-background:#f5f5f5;
+background:#f0f0f0;
 }
 
 #toolbar{
@@ -18,7 +18,7 @@ position:fixed;
 top:0;
 left:0;
 right:0;
-height:60px;
+height:70px;
 background:white;
 display:flex;
 align-items:center;
@@ -26,6 +26,7 @@ gap:10px;
 padding:10px;
 box-shadow:0 2px 5px rgba(0,0,0,0.2);
 z-index:10;
+flex-wrap:wrap;
 }
 
 button{
@@ -37,6 +38,10 @@ color:white;
 font-size:14px;
 }
 
+button:hover{
+opacity:0.8;
+}
+
 input[type="color"],
 input[type="range"],
 select{
@@ -45,25 +50,39 @@ height:35px;
 
 canvas{
 position:absolute;
-top:60px;
+top:70px;
 left:0;
+background:white;
+}
+
+.dark{
+background:#111;
+color:white;
 }
 </style>
 </head>
 <body>
 
 <div id="toolbar">
+<button onclick="setTool('pen')">✏ ปากกา</button>
+<button onclick="setTool('highlighter')">🖍 ไฮไลท์</button>
+<button onclick="setTool('eraser')">🧽 ยางลบ</button>
+<button onclick="undo()">↩ Undo</button>
+<button onclick="redo()">↪ Redo</button>
+<button onclick="addPage()">➕ หน้า</button>
+<button onclick="saveImage()">💾 Export</button>
+<button onclick="toggleDark()">🌙</button>
+
 <input type="color" id="colorPicker" value="#000000">
-<input type="range" id="size" min="1" max="20" value="3">
-<button onclick="setMode('draw')">✏ ปากกา</button>
-<button onclick="setMode('erase')">🧽 ยางลบ</button>
-<button onclick="clearCanvas()">🗑 ล้าง</button>
-<button onclick="saveImage()">💾 บันทึก</button>
+<input type="range" id="size" min="1" max="25" value="4">
+
 <select id="paperType" onchange="changePaper()">
-<option value="plain">กระดาษเปล่า</option>
-<option value="line">กระดาษเส้น</option>
-<option value="grid">กระดาษตาราง</option>
+<option value="plain">เปล่า</option>
+<option value="line">เส้น</option>
+<option value="grid">ตาราง</option>
 </select>
+
+<input type="file" id="imgUpload" accept="image/*">
 </div>
 
 <canvas id="canvas"></canvas>
@@ -72,23 +91,54 @@ left:0;
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+let pages = [];
+let currentPage = 0;
 let drawing = false;
-let mode = "draw";
+let tool = "pen";
+let history = [];
+let redoStack = [];
 
 function resizeCanvas(){
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight - 60;
-changePaper();
+canvas.height = window.innerHeight - 70;
+renderPage();
 }
 resizeCanvas();
 window.onresize = resizeCanvas;
 
+function saveState(){
+history.push(canvas.toDataURL());
+if(history.length>50) history.shift();
+}
+
+function undo(){
+if(history.length>0){
+redoStack.push(canvas.toDataURL());
+let img = new Image();
+img.src = history.pop();
+img.onload=()=>ctx.drawImage(img,0,0);
+}
+}
+
+function redo(){
+if(redoStack.length>0){
+let img = new Image();
+img.src = redoStack.pop();
+img.onload=()=>ctx.drawImage(img,0,0);
+}
+}
+
 canvas.addEventListener("pointerdown", e=>{
 drawing = true;
+ctx.beginPath();
 draw(e);
 });
+
 canvas.addEventListener("pointermove", draw);
-canvas.addEventListener("pointerup", ()=>drawing=false);
+canvas.addEventListener("pointerup", ()=>{
+drawing=false;
+saveState();
+});
 canvas.addEventListener("pointerout", ()=>drawing=false);
 
 function draw(e){
@@ -98,16 +148,21 @@ let rect = canvas.getBoundingClientRect();
 let x = e.clientX - rect.left;
 let y = e.clientY - rect.top;
 
-ctx.lineCap = "round";
-ctx.lineJoin = "round";
+ctx.lineCap="round";
+ctx.lineJoin="round";
 
-if(mode === "erase"){
-ctx.globalCompositeOperation = "destination-out";
-ctx.lineWidth = 20;
+if(tool==="eraser"){
+ctx.globalCompositeOperation="destination-out";
+ctx.lineWidth=20;
 }else{
-ctx.globalCompositeOperation = "source-over";
-ctx.strokeStyle = document.getElementById("colorPicker").value;
-ctx.lineWidth = document.getElementById("size").value * (e.pressure || 1);
+ctx.globalCompositeOperation="source-over";
+ctx.strokeStyle=document.getElementById("colorPicker").value;
+ctx.lineWidth=document.getElementById("size").value*(e.pressure||1);
+if(tool==="highlighter"){
+ctx.globalAlpha=0.3;
+}else{
+ctx.globalAlpha=1;
+}
 }
 
 ctx.lineTo(x,y);
@@ -116,28 +171,41 @@ ctx.beginPath();
 ctx.moveTo(x,y);
 }
 
-function setMode(m){
-mode = m;
+function setTool(t){
+tool=t;
 }
 
-function clearCanvas(){
+function addPage(){
+pages.push(canvas.toDataURL());
+currentPage = pages.length;
 ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function renderPage(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+if(pages[currentPage]){
+let img=new Image();
+img.src=pages[currentPage];
+img.onload=()=>ctx.drawImage(img,0,0);
+}
 changePaper();
 }
 
 function saveImage(){
-let link = document.createElement("a");
-link.download = "โน้ต.png";
-link.href = canvas.toDataURL();
+let link=document.createElement("a");
+link.download="note.png";
+link.href=canvas.toDataURL();
 link.click();
 }
 
-function changePaper(){
-let type = document.getElementById("paperType").value;
-ctx.clearRect(0,0,canvas.width,canvas.height);
+function toggleDark(){
+document.body.classList.toggle("dark");
+}
 
-if(type === "line"){
-ctx.strokeStyle = "#ddd";
+function changePaper(){
+let type=document.getElementById("paperType").value;
+if(type==="line"){
+ctx.strokeStyle="#ddd";
 for(let i=20;i<canvas.height;i+=30){
 ctx.beginPath();
 ctx.moveTo(0,i);
@@ -145,9 +213,8 @@ ctx.lineTo(canvas.width,i);
 ctx.stroke();
 }
 }
-
-if(type === "grid"){
-ctx.strokeStyle = "#eee";
+if(type==="grid"){
+ctx.strokeStyle="#eee";
 for(let i=20;i<canvas.height;i+=25){
 ctx.beginPath();
 ctx.moveTo(0,i);
@@ -163,6 +230,16 @@ ctx.stroke();
 }
 }
 
+document.getElementById("imgUpload").addEventListener("change",function(e){
+let file=e.target.files[0];
+let reader=new FileReader();
+reader.onload=function(evt){
+let img=new Image();
+img.src=evt.target.result;
+img.onload=()=>ctx.drawImage(img,50,50,200,200);
+}
+reader.readAsDataURL(file);
+});
 </script>
 
 </body>
