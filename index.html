@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MemoryGram</title>
-
+<title>MemoryGram Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <style>
+
+/* ================= GLOBAL ================= */
+
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Prompt',sans-serif;}
 
 body{
@@ -16,33 +17,55 @@ color:white;
 transition:0.4s;
 }
 
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 30px;
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(20px);
-position:sticky;
-top:0;
-z-index:100;
-}
-
-header h1{
-font-weight:700;
-font-size:22px;
-background:linear-gradient(90deg,#6a5cff,#00f2ff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
+.hidden{display:none;}
 
 button{
-padding:8px 16px;
+padding:8px 15px;
 border:none;
 border-radius:20px;
 background:linear-gradient(90deg,#6a5cff,#00f2ff);
 color:white;
 cursor:pointer;
+}
+
+input{
+padding:8px;
+border-radius:10px;
+border:none;
+margin:5px 0;
+width:100%;
+}
+
+/* ================= AUTH ================= */
+
+.auth{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:linear-gradient(45deg,#141e30,#243b55);
+}
+
+.auth-box{
+background:rgba(255,255,255,0.1);
+padding:40px;
+border-radius:20px;
+width:320px;
+backdrop-filter:blur(20px);
+}
+
+.auth-box h2{text-align:center;margin-bottom:15px;}
+
+/* ================= APP ================= */
+
+header{
+display:flex;
+justify-content:space-between;
+padding:15px 30px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(20px);
+position:sticky;
+top:0;
 }
 
 .container{
@@ -51,36 +74,11 @@ margin:20px auto;
 padding:0 15px;
 }
 
-/* Stories */
-.stories{
-display:flex;
-gap:15px;
-overflow-x:auto;
-padding:15px 0;
-}
-
-.story{
-width:70px;
-height:70px;
-border-radius:50%;
-border:3px solid #6a5cff;
-overflow:hidden;
-cursor:pointer;
-}
-
-.story img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-/* Post */
 .post{
 background:rgba(255,255,255,0.05);
 margin-bottom:20px;
 border-radius:20px;
 overflow:hidden;
-padding-bottom:10px;
 }
 
 .post img{
@@ -93,210 +91,308 @@ object-fit:cover;
 padding:10px 15px;
 }
 
-.like{
-cursor:pointer;
-margin-top:5px;
-}
-
-.comment-box{
-margin-top:10px;
+.story-bar{
 display:flex;
 gap:10px;
+overflow-x:auto;
+margin-bottom:20px;
 }
 
-.comment-box input{
-flex:1;
-padding:6px;
-border-radius:10px;
-border:none;
+.story{
+width:70px;height:70px;border-radius:50%;
+border:3px solid #6a5cff;
+overflow:hidden;
+cursor:pointer;
 }
 
-.comments{
-margin-top:8px;
+.story img{
+width:100%;height:100%;object-fit:cover;
+}
+
+.profile{
+text-align:center;
+margin-bottom:20px;
+}
+
+.profile img{
+width:100px;height:100px;border-radius:50%;
+object-fit:cover;
+margin-bottom:10px;
+}
+
+.comment{
 font-size:14px;
 opacity:0.8;
 }
 
-/* Upload */
-.upload{
-background:rgba(255,255,255,0.05);
-padding:15px;
-border-radius:20px;
-margin-bottom:20px;
-}
-
-/* Search */
-#search{
-width:100%;
-padding:10px;
-margin-bottom:15px;
-border-radius:20px;
-border:none;
-}
-
-/* Modal Story */
-#storyModal{
+.chat-box{
 position:fixed;
-top:0;left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
+bottom:0;right:0;
+width:300px;
+height:400px;
+background:#111;
+border-radius:20px 20px 0 0;
 display:none;
-align-items:center;
-justify-content:center;
-z-index:999;
+flex-direction:column;
 }
 
-#storyModal img{
-max-width:80%;
-max-height:80%;
-border-radius:20px;
+.chat-messages{
+flex:1;
+overflow-y:auto;
+padding:10px;
 }
 
-.dark{
-background:#000;
+.notification{
+position:fixed;
+top:10px;right:10px;
+background:red;
+padding:10px;
+border-radius:10px;
+display:none;
 }
+
+.dark{background:#000;}
 
 </style>
 </head>
 <body>
 
+<!-- AUTH PAGE -->
+<div id="authPage" class="auth">
+<div class="auth-box">
+<h2>MemoryGram</h2>
+<input type="text" id="username" placeholder="ชื่อผู้ใช้">
+<input type="password" id="password" placeholder="รหัสผ่าน">
+<button onclick="register()">สมัครสมาชิก</button>
+<button onclick="login()">เข้าสู่ระบบ</button>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+
 <header>
-<h1>MemoryGram</h1>
+<h3>MemoryGram</h3>
+<div>
 <button onclick="toggleDark()">🌙</button>
+<button onclick="logout()">ออก</button>
+</div>
 </header>
 
 <div class="container">
 
-<input type="text" id="search" placeholder="ค้นหาโพสต์..." onkeyup="searchPost()">
+<div class="profile" id="profile"></div>
 
-<!-- Stories -->
-<div class="stories" id="stories"></div>
+<div class="story-bar" id="stories"></div>
 
-<!-- Upload -->
-<div class="upload">
-<h3>สร้างโพสต์ใหม่</h3>
-<input type="file" id="uploadImg" accept="image/*">
-<input type="text" id="caption" placeholder="เขียนแคปชัน...">
+<div>
+<h4>สร้างโพสต์</h4>
+<input type="file" id="postImg">
+<input type="text" id="caption" placeholder="เขียนแคปชัน">
 <button onclick="addPost()">โพสต์</button>
 </div>
 
-<!-- Feed -->
+<hr style="margin:20px 0;">
+
 <div id="feed"></div>
 
 </div>
 
-<!-- Story Modal -->
-<div id="storyModal" onclick="this.style.display='none'">
-<img id="storyImg">
 </div>
 
+<div class="chat-box" id="chatBox">
+<div class="chat-messages" id="chatMessages"></div>
+<input type="text" id="chatInput" placeholder="พิมพ์ข้อความ...">
+<button onclick="sendMessage()">ส่ง</button>
+</div>
+
+<div class="notification" id="notif">แจ้งเตือนใหม่!</div>
+
 <script>
+
+/* ================= DATA ================= */
+
+let users = JSON.parse(localStorage.getItem("users")) || [];
+let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 let stories = JSON.parse(localStorage.getItem("stories")) || [];
+let chats = JSON.parse(localStorage.getItem("chats")) || [];
 
-function save(){
-localStorage.setItem("posts", JSON.stringify(posts));
-localStorage.setItem("stories", JSON.stringify(stories));
+function saveAll(){
+localStorage.setItem("users",JSON.stringify(users));
+localStorage.setItem("currentUser",JSON.stringify(currentUser));
+localStorage.setItem("posts",JSON.stringify(posts));
+localStorage.setItem("stories",JSON.stringify(stories));
+localStorage.setItem("chats",JSON.stringify(chats));
 }
 
-function render(){
-let feed = document.getElementById("feed");
+/* ================= AUTH ================= */
+
+function register(){
+let u=document.getElementById("username").value;
+let p=document.getElementById("password").value;
+if(!u||!p) return alert("กรอกข้อมูลให้ครบ");
+users.push({username:u,password:p,followers:0});
+saveAll();
+alert("สมัครสำเร็จ");
+}
+
+function login(){
+let u=document.getElementById("username").value;
+let p=document.getElementById("password").value;
+let user=users.find(x=>x.username===u && x.password===p);
+if(user){
+currentUser=user;
+saveAll();
+startApp();
+}else{
+alert("ข้อมูลไม่ถูกต้อง");
+}
+}
+
+function logout(){
+currentUser=null;
+saveAll();
+location.reload();
+}
+
+/* ================= APP ================= */
+
+function startApp(){
+document.getElementById("authPage").classList.add("hidden");
+document.getElementById("app").classList.remove("hidden");
+renderProfile();
+renderPosts();
+renderStories();
+}
+
+if(currentUser) startApp();
+
+/* ================= PROFILE ================= */
+
+function renderProfile(){
+document.getElementById("profile").innerHTML=
+`
+<img src="https://i.pravatar.cc/150?u=${currentUser.username}">
+<h3>${currentUser.username}</h3>
+<p>ผู้ติดตาม: ${currentUser.followers}</p>
+<button onclick="openChat()">แชท</button>
+`;
+}
+
+/* ================= POSTS ================= */
+
+function addPost(){
+let file=document.getElementById("postImg").files[0];
+let caption=document.getElementById("caption").value;
+if(!file) return;
+let reader=new FileReader();
+reader.onload=function(e){
+posts.unshift({
+user:currentUser.username,
+img:e.target.result,
+caption:caption,
+likes:0,
+comments:[]
+});
+stories.unshift(e.target.result);
+saveAll();
+renderPosts();
+renderStories();
+showNotif();
+}
+reader.readAsDataURL(file);
+}
+
+function renderPosts(){
+let feed=document.getElementById("feed");
 feed.innerHTML="";
-posts.forEach((p,index)=>{
-feed.innerHTML += `
+posts.forEach((p,i)=>{
+feed.innerHTML+=`
 <div class="post">
 <img src="${p.img}">
 <div class="post-content">
-<p><strong>${p.caption}</strong></p>
-<p class="like" onclick="likePost(${index})">❤️ ${p.likes}</p>
-<div class="comments">
-${p.comments.map(c=>`<div>💬 ${c}</div>`).join("")}
+<b>${p.user}</b>
+<p>${p.caption}</p>
+<p onclick="like(${i})">❤️ ${p.likes}</p>
+<div>
+${p.comments.map(c=>`<div class="comment">💬 ${c}</div>`).join("")}
 </div>
-<div class="comment-box">
-<input type="text" id="comment${index}" placeholder="คอมเมนต์...">
-<button onclick="addComment(${index})">ส่ง</button>
-</div>
+<input type="text" id="c${i}" placeholder="คอมเมนต์">
+<button onclick="comment(${i})">ส่ง</button>
 </div>
 </div>
 `;
 });
 }
+
+function like(i){
+posts[i].likes++;
+saveAll();
+renderPosts();
+}
+
+function comment(i){
+let input=document.getElementById("c"+i);
+posts[i].comments.push(input.value);
+saveAll();
+renderPosts();
+}
+
+/* ================= STORIES ================= */
 
 function renderStories(){
-let s = document.getElementById("stories");
+let s=document.getElementById("stories");
 s.innerHTML="";
-stories.forEach((st,i)=>{
-s.innerHTML += `
-<div class="story" onclick="openStory(${i})">
-<img src="${st}">
+stories.forEach((img,i)=>{
+s.innerHTML+=`
+<div class="story" onclick="viewStory('${img}')">
+<img src="${img}">
 </div>
 `;
 });
 }
 
-function addPost(){
-let file = document.getElementById("uploadImg").files[0];
-let caption = document.getElementById("caption").value;
-if(!file) return;
-
-let reader = new FileReader();
-reader.onload = function(e){
-posts.unshift({img:e.target.result, caption:caption, likes:0, comments:[]});
-stories.unshift(e.target.result);
-save();
-render();
-renderStories();
-}
-reader.readAsDataURL(file);
-
-document.getElementById("caption").value="";
+function viewStory(src){
+let w=window.open("");
+w.document.write(`<img src="${src}" style="width:100%">`);
 }
 
-function likePost(i){
-posts[i].likes++;
-save();
-render();
+/* ================= CHAT ================= */
+
+function openChat(){
+document.getElementById("chatBox").style.display="flex";
 }
 
-function addComment(i){
-let input = document.getElementById("comment"+i);
-if(input.value.trim() === "") return;
-posts[i].comments.push(input.value);
-save();
-render();
+function sendMessage(){
+let msg=document.getElementById("chatInput").value;
+chats.push({user:currentUser.username,message:msg});
+saveAll();
+renderChat();
 }
 
-function openStory(i){
-document.getElementById("storyImg").src = stories[i];
-document.getElementById("storyModal").style.display="flex";
+function renderChat(){
+let box=document.getElementById("chatMessages");
+box.innerHTML="";
+chats.forEach(c=>{
+box.innerHTML+=`<div><b>${c.user}:</b> ${c.message}</div>`;
+});
 }
+
+/* ================= NOTIFICATION ================= */
+
+function showNotif(){
+let n=document.getElementById("notif");
+n.style.display="block";
+setTimeout(()=>n.style.display="none",3000);
+}
+
+/* ================= DARK ================= */
 
 function toggleDark(){
 document.body.classList.toggle("dark");
 }
 
-function searchPost(){
-let keyword = document.getElementById("search").value.toLowerCase();
-let filtered = posts.filter(p=>p.caption.toLowerCase().includes(keyword));
-let feed = document.getElementById("feed");
-feed.innerHTML="";
-filtered.forEach((p,index)=>{
-feed.innerHTML += `
-<div class="post">
-<img src="${p.img}">
-<div class="post-content">
-<p><strong>${p.caption}</strong></p>
-<p>❤️ ${p.likes}</p>
-</div>
-</div>
-`;
-});
-}
-
-render();
-renderStories();
 </script>
-
 </body>
 </html>
