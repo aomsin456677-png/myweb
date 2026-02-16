@@ -3,93 +3,299 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เว็บถ่ายรูปของฉัน</title>
+<title>MemoryGram</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-        padding: 20px;
-    }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Prompt',sans-serif;}
 
-    h1 {
-        color: white;
-    }
+body{
+background:#0f0f14;
+color:white;
+transition:0.4s;
+}
 
-    video {
-        width: 90%;
-        max-width: 400px;
-        border-radius: 15px;
-        margin-top: 15px;
-    }
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 30px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(20px);
+position:sticky;
+top:0;
+z-index:100;
+}
 
-    canvas {
-        display: none;
-    }
+header h1{
+font-weight:700;
+font-size:22px;
+background:linear-gradient(90deg,#6a5cff,#00f2ff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
 
-    button {
-        margin-top: 20px;
-        padding: 12px 25px;
-        font-size: 16px;
-        border: none;
-        border-radius: 10px;
-        background-color: #ff4d6d;
-        color: white;
-        cursor: pointer;
-    }
+button{
+padding:8px 16px;
+border:none;
+border-radius:20px;
+background:linear-gradient(90deg,#6a5cff,#00f2ff);
+color:white;
+cursor:pointer;
+}
 
-    button:hover {
-        background-color: #e63950;
-    }
+.container{
+max-width:700px;
+margin:20px auto;
+padding:0 15px;
+}
 
-    img {
-        margin-top: 20px;
-        width: 90%;
-        max-width: 400px;
-        border-radius: 15px;
-    }
+/* Stories */
+.stories{
+display:flex;
+gap:15px;
+overflow-x:auto;
+padding:15px 0;
+}
+
+.story{
+width:70px;
+height:70px;
+border-radius:50%;
+border:3px solid #6a5cff;
+overflow:hidden;
+cursor:pointer;
+}
+
+.story img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* Post */
+.post{
+background:rgba(255,255,255,0.05);
+margin-bottom:20px;
+border-radius:20px;
+overflow:hidden;
+padding-bottom:10px;
+}
+
+.post img{
+width:100%;
+max-height:400px;
+object-fit:cover;
+}
+
+.post-content{
+padding:10px 15px;
+}
+
+.like{
+cursor:pointer;
+margin-top:5px;
+}
+
+.comment-box{
+margin-top:10px;
+display:flex;
+gap:10px;
+}
+
+.comment-box input{
+flex:1;
+padding:6px;
+border-radius:10px;
+border:none;
+}
+
+.comments{
+margin-top:8px;
+font-size:14px;
+opacity:0.8;
+}
+
+/* Upload */
+.upload{
+background:rgba(255,255,255,0.05);
+padding:15px;
+border-radius:20px;
+margin-bottom:20px;
+}
+
+/* Search */
+#search{
+width:100%;
+padding:10px;
+margin-bottom:15px;
+border-radius:20px;
+border:none;
+}
+
+/* Modal Story */
+#storyModal{
+position:fixed;
+top:0;left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:999;
+}
+
+#storyModal img{
+max-width:80%;
+max-height:80%;
+border-radius:20px;
+}
+
+.dark{
+background:#000;
+}
+
 </style>
 </head>
-
 <body>
 
-<h1>📸 เว็บถ่ายรูป</h1>
+<header>
+<h1>MemoryGram</h1>
+<button onclick="toggleDark()">🌙</button>
+</header>
 
-<video id="video" autoplay></video>
-<br>
-<button onclick="takePhoto()">ถ่ายรูป</button>
+<div class="container">
 
-<canvas id="canvas"></canvas>
-<br>
-<img id="photo">
+<input type="text" id="search" placeholder="ค้นหาโพสต์..." onkeyup="searchPost()">
+
+<!-- Stories -->
+<div class="stories" id="stories"></div>
+
+<!-- Upload -->
+<div class="upload">
+<h3>สร้างโพสต์ใหม่</h3>
+<input type="file" id="uploadImg" accept="image/*">
+<input type="text" id="caption" placeholder="เขียนแคปชัน...">
+<button onclick="addPost()">โพสต์</button>
+</div>
+
+<!-- Feed -->
+<div id="feed"></div>
+
+</div>
+
+<!-- Story Modal -->
+<div id="storyModal" onclick="this.style.display='none'">
+<img id="storyImg">
+</div>
 
 <script>
-    const video = document.getElementById('video');
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
+let stories = JSON.parse(localStorage.getItem("stories")) || [];
 
-    // เปิดกล้อง
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-            video.srcObject = stream;
-        })
-        .catch(error => {
-            alert("ไม่สามารถเปิดกล้องได้");
-            console.log(error);
-        });
+function save(){
+localStorage.setItem("posts", JSON.stringify(posts));
+localStorage.setItem("stories", JSON.stringify(stories));
+}
 
-    function takePhoto() {
-        const canvas = document.getElementById('canvas');
-        const photo = document.getElementById('photo');
+function render(){
+let feed = document.getElementById("feed");
+feed.innerHTML="";
+posts.forEach((p,index)=>{
+feed.innerHTML += `
+<div class="post">
+<img src="${p.img}">
+<div class="post-content">
+<p><strong>${p.caption}</strong></p>
+<p class="like" onclick="likePost(${index})">❤️ ${p.likes}</p>
+<div class="comments">
+${p.comments.map(c=>`<div>💬 ${c}</div>`).join("")}
+</div>
+<div class="comment-box">
+<input type="text" id="comment${index}" placeholder="คอมเมนต์...">
+<button onclick="addComment(${index})">ส่ง</button>
+</div>
+</div>
+</div>
+`;
+});
+}
 
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+function renderStories(){
+let s = document.getElementById("stories");
+s.innerHTML="";
+stories.forEach((st,i)=>{
+s.innerHTML += `
+<div class="story" onclick="openStory(${i})">
+<img src="${st}">
+</div>
+`;
+});
+}
 
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0);
+function addPost(){
+let file = document.getElementById("uploadImg").files[0];
+let caption = document.getElementById("caption").value;
+if(!file) return;
 
-        const imageData = canvas.toDataURL('image/png');
-        photo.src = imageData;
-    }
+let reader = new FileReader();
+reader.onload = function(e){
+posts.unshift({img:e.target.result, caption:caption, likes:0, comments:[]});
+stories.unshift(e.target.result);
+save();
+render();
+renderStories();
+}
+reader.readAsDataURL(file);
+
+document.getElementById("caption").value="";
+}
+
+function likePost(i){
+posts[i].likes++;
+save();
+render();
+}
+
+function addComment(i){
+let input = document.getElementById("comment"+i);
+if(input.value.trim() === "") return;
+posts[i].comments.push(input.value);
+save();
+render();
+}
+
+function openStory(i){
+document.getElementById("storyImg").src = stories[i];
+document.getElementById("storyModal").style.display="flex";
+}
+
+function toggleDark(){
+document.body.classList.toggle("dark");
+}
+
+function searchPost(){
+let keyword = document.getElementById("search").value.toLowerCase();
+let filtered = posts.filter(p=>p.caption.toLowerCase().includes(keyword));
+let feed = document.getElementById("feed");
+feed.innerHTML="";
+filtered.forEach((p,index)=>{
+feed.innerHTML += `
+<div class="post">
+<img src="${p.img}">
+<div class="post-content">
+<p><strong>${p.caption}</strong></p>
+<p>❤️ ${p.likes}</p>
+</div>
+</div>
+`;
+});
+}
+
+render();
+renderStories();
 </script>
 
 </body>
