@@ -1,224 +1,244 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>Grand Graduation 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>งานปัจฉิมแห่งความทรงจำ 2026</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-*{box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Prompt',sans-serif;}
+
 body{
-margin:0;
-font-family:'Inter',sans-serif;
-background:#0f0f14;
+background:#0e0f1a;
 color:white;
 overflow-x:hidden;
 }
 
-/* Animated Gradient Background */
+/* พื้นหลังเคลื่อนไหว */
 body::before{
 content:"";
 position:fixed;
-width:200%;
-height:200%;
-background:linear-gradient(45deg,#1a1a2e,#16213e,#0f3460,#533483);
-background-size:400% 400%;
-animation:bgMove 12s ease infinite;
-z-index:-1;
+width:300%;
+height:300%;
+background:linear-gradient(45deg,#141e30,#243b55,#1f1c2c,#302b63);
+background-size:600% 600%;
+animation:พื้นหลัง 18s ease infinite;
+z-index:-2;
 }
-@keyframes bgMove{
+@keyframes พื้นหลัง{
 0%{background-position:0% 50%;}
 50%{background-position:100% 50%;}
 100%{background-position:0% 50%;}
 }
 
-/* Layout */
+/* หน้า */
 .page{
 display:none;
 min-height:100vh;
 padding:60px 20px;
-transition:0.5s ease;
+transition:0.5s;
 }
 .active{display:block;}
 
+/* กล่องหลัก */
 .container{
-max-width:1000px;
+max-width:1100px;
 margin:auto;
 background:rgba(255,255,255,0.08);
 backdrop-filter:blur(25px);
 border-radius:30px;
 padding:50px;
-box-shadow:0 20px 60px rgba(0,0,0,0.6);
+box-shadow:0 30px 80px rgba(0,0,0,0.7);
 }
 
-/* Typography */
+/* หัวข้อ */
 h1{
-font-size:42px;
+font-size:40px;
 font-weight:800;
-margin-bottom:30px;
-background:linear-gradient(90deg,#ffffff,#9fa8ff);
+margin-bottom:25px;
+background:linear-gradient(90deg,#ffffff,#9ecbff);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
-label{font-weight:500;opacity:0.8;}
-
-input, select, textarea{
-width:100%;
-padding:14px;
-margin:10px 0 20px 0;
-border-radius:14px;
-border:none;
-background:rgba(255,255,255,0.15);
-color:white;
-font-size:14px;
-}
-
-input[type="file"]{
-padding:8px;
-}
-
+/* ปุ่ม */
 button{
 padding:14px 28px;
 border:none;
-border-radius:30px;
-background:linear-gradient(90deg,#6c63ff,#5f9cff);
+border-radius:40px;
+background:linear-gradient(90deg,#6a5cff,#00d4ff);
 color:white;
 font-weight:600;
 cursor:pointer;
 transition:0.3s;
+margin-top:15px;
 }
-
 button:hover{
-transform:translateY(-3px);
-box-shadow:0 10px 25px rgba(0,0,0,0.5);
+transform:translateY(-4px);
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
 }
 
-/* Progress Bar */
+/* อินพุต */
+input, select, textarea{
+width:100%;
+padding:14px;
+margin:10px 0 20px 0;
+border-radius:15px;
+border:none;
+background:rgba(255,255,255,0.15);
+color:white;
+}
+
+/* แถบความคืบหน้า */
 .progress{
-height:6px;
+height:8px;
 background:rgba(255,255,255,0.2);
 border-radius:10px;
 overflow:hidden;
-margin-bottom:30px;
+margin-bottom:20px;
 }
 .progress-bar{
 height:100%;
 width:0%;
-background:linear-gradient(90deg,#6c63ff,#00f2ff);
+background:linear-gradient(90deg,#00f2ff,#6a5cff);
 transition:0.4s;
 }
 
-/* Grid */
+/* กริดแกลเลอรี่ */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
 gap:25px;
 margin-top:40px;
 }
-
 .card{
-background:rgba(255,255,255,0.08);
+background:rgba(255,255,255,0.1);
 border-radius:20px;
 overflow:hidden;
 transition:0.4s;
-position:relative;
 }
-
 .card:hover{
-transform:translateY(-8px);
-box-shadow:0 15px 35px rgba(0,0,0,0.6);
+transform:translateY(-10px);
+box-shadow:0 20px 40px rgba(0,0,0,0.7);
 }
-
 .card img{
 width:100%;
-height:220px;
+height:250px;
 object-fit:cover;
 }
-
 .card p{
 padding:15px;
 font-weight:600;
 }
 
-/* Floating particles */
+/* อนุภาคลอย */
 .particle{
 position:fixed;
 font-size:18px;
-animation:float 6s linear infinite;
+animation:ลอย 8s linear infinite;
 }
-@keyframes float{
+@keyframes ลอย{
 from{transform:translateY(0);opacity:1;}
-to{transform:translateY(-600px);opacity:0;}
+to{transform:translateY(-800px);opacity:0;}
+}
+
+/* ธีมเพิ่มเติม */
+.theme-gold{background:linear-gradient(45deg,#1a1a1a,#3b2f2f,#5c4033);}
+.theme-pink{background:linear-gradient(45deg,#2b1a2f,#4e2a84,#a4508b);}
+.theme-blue{background:linear-gradient(45deg,#141e30,#243b55);}
+.theme-rainbow{background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet);}
+
+audio{display:none;}
+
+@media(max-width:768px){
+.container{padding:25px;}
+h1{font-size:28px;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- PAGE 1 -->
+<!-- หน้า Intro -->
 <div id="page1" class="page active">
 <div class="container">
-<h1>Graduation Memory Experience</h1>
-
-<label>Number of Participants (1-40)</label>
-<input type="number" id="count" min="1" max="40" value="5">
-
-<label>Choose Mood</label>
-<select id="emoji">
-<option value="✨">Elegant</option>
-<option value="🎓">Academic</option>
-<option value="🌟">Modern</option>
-<option value="💎">Luxury</option>
-</select>
-
-<button onclick="goForm()">Continue</button>
+<h1>ยินดีต้อนรับสู่งานปัจฉิม 2026</h1>
+<p>สร้างเว็บความทรงจำแบบหรูหราได้ด้วยตัวเอง</p>
+<button onclick="ไปหน้า2()">เริ่มสร้างเว็บ</button>
 </div>
 </div>
 
-<!-- PAGE 2 -->
+<!-- หน้าเลือกธีม -->
 <div id="page2" class="page">
 <div class="container">
-<h1>Enter Information</h1>
-<div class="progress"><div id="bar" class="progress-bar"></div></div>
-<div id="formArea"></div>
-<label>Final Message</label>
-<textarea id="message"></textarea>
-<button onclick="showFinal()">Create Showcase</button>
+<h1>เลือกธีมของคุณ</h1>
+<select id="themeSelect">
+<option value="theme-blue">ธีมน้ำเงินหรู</option>
+<option value="theme-gold">ธีมทองคลาสสิก</option>
+<option value="theme-pink">ธีมชมพูอินเตอร์</option>
+<option value="theme-rainbow">ธีมสายรุ้งสดใส</option>
+</select>
+
+<label>เลือกจำนวนผู้เข้าร่วม (1-100 คน)</label>
+<input type="number" id="count" min="1" max="100" value="10">
+
+<button onclick="ไปหน้า3()">ถัดไป</button>
 </div>
 </div>
 
-<!-- PAGE 3 -->
+<!-- หน้ากรอกข้อมูล -->
 <div id="page3" class="page">
 <div class="container">
-<h1 id="finalTitle"></h1>
-<div id="finalGrid" class="grid"></div>
+<h1>กรอกข้อมูลเพื่อน</h1>
+<div class="progress"><div id="bar" class="progress-bar"></div></div>
+<div id="formArea"></div>
+<label>ข้อความอวยพร</label>
+<textarea id="message"></textarea>
+<button onclick="แสดงผล()">สร้างแกลเลอรี่</button>
+</div>
+</div>
+
+<!-- หน้าแสดงผล -->
+<div id="page4" class="page">
+<div class="container">
+<h1>ความทรงจำของพวกเรา</h1>
+<div id="gallery" class="grid"></div>
 <h2 id="finalMessage" style="margin-top:40px;"></h2>
-<button onclick="location.reload()">Start Again</button>
+<button onclick="location.reload()">สร้างใหม่อีกครั้ง</button>
+<button onclick="เปิดเพลง()">เปิด / ปิด เพลง</button>
 </div>
 </div>
+
+<audio id="bgmusic" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 let total=0;
 
-function goForm(){
+function ไปหน้า2(){
+เปลี่ยนหน้า(1,2);
+}
+
+function ไปหน้า3(){
 total=document.getElementById("count").value;
-if(total>40) total=40;
+if(total>100) total=100;
 let area=document.getElementById("formArea");
 area.innerHTML="";
 for(let i=1;i<=total;i++){
 area.innerHTML+=`
-<label>Person ${i} Name</label>
+<label>ชื่อคนที่ ${i}</label>
 <input type="text" id="name${i}">
-<label>Upload Photo</label>
-<input type="file" accept="image/*" id="img${i}" onchange="updateProgress()">
+<label>อัปโหลดรูปภาพ</label>
+<input type="file" accept="image/*" id="img${i}" onchange="อัปเดตแถบ()">
 `;
 }
-switchPage(1,2);
+เปลี่ยนหน้า(2,3);
 }
 
-function updateProgress(){
+function อัปเดตแถบ(){
 let uploaded=0;
 for(let i=1;i<=total;i++){
 if(document.getElementById("img"+i).files[0]) uploaded++;
@@ -226,41 +246,37 @@ if(document.getElementById("img"+i).files[0]) uploaded++;
 document.getElementById("bar").style.width=(uploaded/total*100)+"%";
 }
 
-function showFinal(){
-let grid=document.getElementById("finalGrid");
-grid.innerHTML="";
-let emoji=document.getElementById("emoji").value;
-
+function แสดงผล(){
+document.body.className=document.getElementById("themeSelect").value;
+let gallery=document.getElementById("gallery");
+gallery.innerHTML="";
 for(let i=1;i<=total;i++){
 let name=document.getElementById("name"+i).value;
 let file=document.getElementById("img"+i).files[0];
 if(file){
 let reader=new FileReader();
 reader.onload=function(e){
-grid.innerHTML+=`
+gallery.innerHTML+=`
 <div class="card">
 <img src="${e.target.result}">
-<p>${emoji} ${name}</p>
+<p>✨ ${name}</p>
 </div>
 `;
 }
 reader.readAsDataURL(file);
 }
 }
-
-document.getElementById("finalTitle").innerText="Class of 2026 Showcase";
 document.getElementById("finalMessage").innerText=document.getElementById("message").value;
-
-switchPage(2,3);
-startParticles();
+เปลี่ยนหน้า(3,4);
+เริ่มเอฟเฟกต์();
 }
 
-function switchPage(a,b){
+function เปลี่ยนหน้า(a,b){
 document.getElementById("page"+a).classList.remove("active");
 document.getElementById("page"+b).classList.add("active");
 }
 
-function startParticles(){
+function เริ่มเอฟเฟกต์(){
 setInterval(()=>{
 let p=document.createElement("div");
 p.className="particle";
@@ -268,8 +284,14 @@ p.innerHTML="✨";
 p.style.left=Math.random()*window.innerWidth+"px";
 p.style.top=window.innerHeight+"px";
 document.body.appendChild(p);
-setTimeout(()=>p.remove(),6000);
-},300);
+setTimeout(()=>p.remove(),8000);
+},200);
+}
+
+function เปิดเพลง(){
+let music=document.getElementById("bgmusic");
+if(music.paused){music.play();}
+else{music.pause();}
 }
 </script>
 
