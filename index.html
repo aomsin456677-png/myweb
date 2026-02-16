@@ -2,130 +2,155 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Grand Graduation Luxury</title>
+<title>Grand Graduation 2026</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-:root{
---gold:linear-gradient(135deg,#d4af37,#fff0b3);
---glass:rgba(255,255,255,0.15);
-}
-
+*{box-sizing:border-box;}
 body{
 margin:0;
-font-family:'Poppins',sans-serif;
-overflow-x:hidden;
-background:#0f0f1a;
+font-family:'Inter',sans-serif;
+background:#0f0f14;
 color:white;
+overflow-x:hidden;
 }
 
-/* Aurora Background */
+/* Animated Gradient Background */
 body::before{
 content:"";
 position:fixed;
 width:200%;
 height:200%;
-background:radial-gradient(circle at 30% 40%,#3a0ca3,transparent 40%),
-radial-gradient(circle at 70% 60%,#7209b7,transparent 40%),
-radial-gradient(circle at 50% 80%,#560bad,transparent 40%);
-animation:moveBg 15s infinite alternate;
+background:linear-gradient(45deg,#1a1a2e,#16213e,#0f3460,#533483);
+background-size:400% 400%;
+animation:bgMove 12s ease infinite;
 z-index:-1;
 }
-
-@keyframes moveBg{
-from{transform:translate(-10%,-10%);}
-to{transform:translate(10%,10%);}
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
 
+/* Layout */
 .page{
 display:none;
 min-height:100vh;
-padding:60px;
-transition:0.6s;
+padding:60px 20px;
+transition:0.5s ease;
 }
-
 .active{display:block;}
 
-.glass{
-background:var(--glass);
-backdrop-filter:blur(20px);
-border-radius:25px;
-padding:40px;
-box-shadow:0 20px 60px rgba(0,0,0,0.4);
+.container{
+max-width:1000px;
+margin:auto;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(25px);
+border-radius:30px;
+padding:50px;
+box-shadow:0 20px 60px rgba(0,0,0,0.6);
 }
 
+/* Typography */
 h1{
-font-family:'Playfair Display',serif;
-font-size:40px;
-background:var(--gold);
+font-size:42px;
+font-weight:800;
+margin-bottom:30px;
+background:linear-gradient(90deg,#ffffff,#9fa8ff);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
-text-align:center;
-margin-bottom:30px;
 }
+
+label{font-weight:500;opacity:0.8;}
 
 input, select, textarea{
 width:100%;
-padding:12px;
-margin:8px 0;
-border-radius:12px;
+padding:14px;
+margin:10px 0 20px 0;
+border-radius:14px;
 border:none;
-background:rgba(255,255,255,0.2);
+background:rgba(255,255,255,0.15);
 color:white;
+font-size:14px;
+}
+
+input[type="file"]{
+padding:8px;
 }
 
 button{
-padding:12px 25px;
+padding:14px 28px;
 border:none;
 border-radius:30px;
-background:var(--gold);
-font-weight:bold;
+background:linear-gradient(90deg,#6c63ff,#5f9cff);
+color:white;
+font-weight:600;
 cursor:pointer;
 transition:0.3s;
 }
 
 button:hover{
-transform:scale(1.05);
-box-shadow:0 0 20px gold;
+transform:translateY(-3px);
+box-shadow:0 10px 25px rgba(0,0,0,0.5);
 }
 
+/* Progress Bar */
+.progress{
+height:6px;
+background:rgba(255,255,255,0.2);
+border-radius:10px;
+overflow:hidden;
+margin-bottom:30px;
+}
+.progress-bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#6c63ff,#00f2ff);
+transition:0.4s;
+}
+
+/* Grid */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
 gap:25px;
 margin-top:40px;
 }
 
 .card{
-background:rgba(255,255,255,0.1);
+background:rgba(255,255,255,0.08);
 border-radius:20px;
 overflow:hidden;
-text-align:center;
-padding-bottom:15px;
 transition:0.4s;
+position:relative;
 }
 
 .card:hover{
-transform:translateY(-10px);
-box-shadow:0 0 25px gold;
+transform:translateY(-8px);
+box-shadow:0 15px 35px rgba(0,0,0,0.6);
 }
 
 .card img{
 width:100%;
-height:200px;
+height:220px;
 object-fit:cover;
 }
 
-.sparkle{
-position:fixed;
-font-size:18px;
-animation:float 5s linear infinite;
+.card p{
+padding:15px;
+font-weight:600;
 }
 
+/* Floating particles */
+.particle{
+position:fixed;
+font-size:18px;
+animation:float 6s linear infinite;
+}
 @keyframes float{
 from{transform:translateY(0);opacity:1;}
-to{transform:translateY(-400px);opacity:0;}
+to{transform:translateY(-600px);opacity:0;}
 }
 </style>
 </head>
@@ -134,18 +159,18 @@ to{transform:translateY(-400px);opacity:0;}
 
 <!-- PAGE 1 -->
 <div id="page1" class="page active">
-<div class="glass">
-<h1>Grand Graduation Experience</h1>
+<div class="container">
+<h1>Graduation Memory Experience</h1>
 
-<label>Number of People (1-40)</label>
+<label>Number of Participants (1-40)</label>
 <input type="number" id="count" min="1" max="40" value="5">
 
-<label>Theme Mood</label>
+<label>Choose Mood</label>
 <select id="emoji">
 <option value="✨">Elegant</option>
-<option value="👑">Royal</option>
-<option value="💎">Luxury</option>
+<option value="🎓">Academic</option>
 <option value="🌟">Modern</option>
+<option value="💎">Luxury</option>
 </select>
 
 <button onclick="goForm()">Continue</button>
@@ -154,8 +179,9 @@ to{transform:translateY(-400px);opacity:0;}
 
 <!-- PAGE 2 -->
 <div id="page2" class="page">
-<div class="glass">
-<h1>Executive Information Panel</h1>
+<div class="container">
+<h1>Enter Information</h1>
+<div class="progress"><div id="bar" class="progress-bar"></div></div>
 <div id="formArea"></div>
 <label>Final Message</label>
 <textarea id="message"></textarea>
@@ -165,10 +191,12 @@ to{transform:translateY(-400px);opacity:0;}
 
 <!-- PAGE 3 -->
 <div id="page3" class="page">
+<div class="container">
 <h1 id="finalTitle"></h1>
 <div id="finalGrid" class="grid"></div>
-<h2 id="finalMessage" style="text-align:center;margin-top:40px;"></h2>
-<button onclick="location.reload()">Restart</button>
+<h2 id="finalMessage" style="margin-top:40px;"></h2>
+<button onclick="location.reload()">Start Again</button>
+</div>
 </div>
 
 <script>
@@ -181,12 +209,21 @@ let area=document.getElementById("formArea");
 area.innerHTML="";
 for(let i=1;i<=total;i++){
 area.innerHTML+=`
-<h3>Person ${i}</h3>
-<input type="text" id="name${i}" placeholder="Full Name">
-<input type="file" accept="image/*" id="img${i}">
+<label>Person ${i} Name</label>
+<input type="text" id="name${i}">
+<label>Upload Photo</label>
+<input type="file" accept="image/*" id="img${i}" onchange="updateProgress()">
 `;
 }
 switchPage(1,2);
+}
+
+function updateProgress(){
+let uploaded=0;
+for(let i=1;i<=total;i++){
+if(document.getElementById("img"+i).files[0]) uploaded++;
+}
+document.getElementById("bar").style.width=(uploaded/total*100)+"%";
 }
 
 function showFinal(){
@@ -211,28 +248,28 @@ reader.readAsDataURL(file);
 }
 }
 
-document.getElementById("finalTitle").innerText="National Graduation Showcase";
+document.getElementById("finalTitle").innerText="Class of 2026 Showcase";
 document.getElementById("finalMessage").innerText=document.getElementById("message").value;
 
 switchPage(2,3);
-sparkleEffect();
+startParticles();
 }
 
-function switchPage(from,to){
-document.getElementById("page"+from).classList.remove("active");
-document.getElementById("page"+to).classList.add("active");
+function switchPage(a,b){
+document.getElementById("page"+a).classList.remove("active");
+document.getElementById("page"+b).classList.add("active");
 }
 
-function sparkleEffect(){
+function startParticles(){
 setInterval(()=>{
-let s=document.createElement("div");
-s.className="sparkle";
-s.innerHTML="✨";
-s.style.left=Math.random()*window.innerWidth+"px";
-s.style.top=window.innerHeight+"px";
-document.body.appendChild(s);
-setTimeout(()=>s.remove(),5000);
-},400);
+let p=document.createElement("div");
+p.className="particle";
+p.innerHTML="✨";
+p.style.left=Math.random()*window.innerWidth+"px";
+p.style.top=window.innerHeight+"px";
+document.body.appendChild(p);
+setTimeout(()=>p.remove(),6000);
+},300);
 }
 </script>
 
