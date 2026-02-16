@@ -3,465 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Graduation Memory 2026</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<title>เว็บถ่ายรูปของฉัน</title>
 
 <style>
-/* =========================
-   GLOBAL RESET
-========================= */
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Prompt',sans-serif;
-}
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        padding: 20px;
+    }
 
-body{
-background:#0f0f1a;
-color:#fff;
-overflow-x:hidden;
-transition:0.5s;
-}
+    h1 {
+        color: white;
+    }
 
-.hidden{display:none;}
-.page{
-min-height:100vh;
-padding:60px 20px;
-display:none;
-animation:fadeIn 0.8s ease;
-}
-.page.active{display:block;}
+    video {
+        width: 90%;
+        max-width: 400px;
+        border-radius: 15px;
+        margin-top: 15px;
+    }
 
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(20px);}
-to{opacity:1;transform:translateY(0);}
-}
+    canvas {
+        display: none;
+    }
 
-/* =========================
-   CONTAINER
-========================= */
-.container{
-max-width:1200px;
-margin:auto;
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(25px);
-border-radius:30px;
-padding:50px;
-box-shadow:0 40px 100px rgba(0,0,0,0.8);
-}
+    button {
+        margin-top: 20px;
+        padding: 12px 25px;
+        font-size: 16px;
+        border: none;
+        border-radius: 10px;
+        background-color: #ff4d6d;
+        color: white;
+        cursor: pointer;
+    }
 
-/* =========================
-   TITLES
-========================= */
-h1{
-font-size:42px;
-font-weight:900;
-margin-bottom:20px;
-background:linear-gradient(90deg,#ffffff,#00f2ff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
+    button:hover {
+        background-color: #e63950;
+    }
 
-h2{
-margin:30px 0 10px 0;
-font-weight:700;
-}
-
-/* =========================
-   BUTTONS
-========================= */
-button{
-padding:14px 28px;
-border:none;
-border-radius:40px;
-cursor:pointer;
-background:linear-gradient(90deg,#6a5cff,#00d4ff);
-color:white;
-font-weight:600;
-transition:0.3s;
-margin:10px 5px;
-}
-button:hover{
-transform:translateY(-5px);
-box-shadow:0 15px 35px rgba(0,0,0,0.6);
-}
-
-/* =========================
-   INPUT
-========================= */
-input, select, textarea{
-width:100%;
-padding:14px;
-margin:10px 0 20px 0;
-border-radius:15px;
-border:none;
-background:rgba(255,255,255,0.15);
-color:white;
-}
-
-textarea{min-height:120px;}
-
-/* =========================
-   PROGRESS BAR
-========================= */
-.progress{
-height:8px;
-background:rgba(255,255,255,0.2);
-border-radius:10px;
-overflow:hidden;
-margin-bottom:20px;
-}
-.progress-bar{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#00f2ff,#6a5cff);
-transition:0.4s;
-}
-
-/* =========================
-   GRID GALLERY
-========================= */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-gap:25px;
-margin-top:40px;
-}
-
-.card{
-background:rgba(255,255,255,0.1);
-border-radius:20px;
-overflow:hidden;
-transition:0.4s;
-position:relative;
-cursor:pointer;
-}
-
-.card:hover{
-transform:translateY(-10px) scale(1.03);
-box-shadow:0 20px 50px rgba(0,0,0,0.8);
-}
-
-.card img{
-width:100%;
-height:260px;
-object-fit:cover;
-transition:0.5s;
-}
-
-.card:hover img{
-filter:brightness(1.2) saturate(1.3);
-}
-
-.card p{
-padding:15px;
-font-weight:600;
-text-align:center;
-}
-
-/* =========================
-   LIGHTBOX
-========================= */
-#lightbox{
-position:fixed;
-top:0;left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-display:flex;
-align-items:center;
-justify-content:center;
-display:none;
-z-index:999;
-}
-
-#lightbox img{
-max-width:80%;
-max-height:80%;
-border-radius:20px;
-}
-
-/* =========================
-   THEMES
-========================= */
-.theme-blue{background:linear-gradient(45deg,#141e30,#243b55);}
-.theme-gold{background:linear-gradient(45deg,#1a1a1a,#5c4033);}
-.theme-pink{background:linear-gradient(45deg,#2b1a2f,#a4508b);}
-.theme-rainbow{background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet);}
-.theme-dark{background:#000;}
-.theme-sky{background:linear-gradient(#2193b0,#6dd5ed);}
-.theme-purple{background:linear-gradient(#41295a,#2f0743);}
-.theme-luxury{background:linear-gradient(#000000,#434343);}
-
-/* =========================
-   PARTICLES
-========================= */
-.particle{
-position:fixed;
-font-size:20px;
-animation:float 8s linear infinite;
-}
-@keyframes float{
-from{transform:translateY(0);opacity:1;}
-to{transform:translateY(-900px);opacity:0;}
-}
-
-/* =========================
-   CONFETTI
-========================= */
-.confetti{
-position:fixed;
-width:8px;
-height:8px;
-background:red;
-animation:fall 4s linear infinite;
-}
-@keyframes fall{
-from{transform:translateY(-50px) rotate(0deg);}
-to{transform:translateY(100vh) rotate(360deg);}
-}
-
-/* =========================
-   SEARCH BAR
-========================= */
-#search{
-margin-top:20px;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media(max-width:768px){
-.container{padding:25px;}
-h1{font-size:28px;}
-}
-
+    img {
+        margin-top: 20px;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 15px;
+    }
 </style>
 </head>
 
 <body>
 
-<!-- PAGE 1 -->
-<div id="page1" class="page active">
-<div class="container">
-<h1>งานปัจฉิมแห่งความทรงจำ 2026</h1>
-<p>สร้างเว็บหรูระดับชาติด้วยตัวเอง</p>
-<button onclick="go(1,2)">เริ่มสร้าง</button>
-</div>
-</div>
+<h1>📸 เว็บถ่ายรูป</h1>
 
-<!-- PAGE 2 -->
-<div id="page2" class="page">
-<div class="container">
-<h1>ตั้งค่าธีมและจำนวนคน</h1>
+<video id="video" autoplay></video>
+<br>
+<button onclick="takePhoto()">ถ่ายรูป</button>
 
-<select id="themeSelect">
-<option value="theme-blue">น้ำเงินหรู</option>
-<option value="theme-gold">ทองคลาสสิก</option>
-<option value="theme-pink">ชมพูอินเตอร์</option>
-<option value="theme-rainbow">สายรุ้งสดใส</option>
-<option value="theme-dark">ดำมินิมอล</option>
-<option value="theme-sky">ฟ้าพรีเมียม</option>
-<option value="theme-purple">ม่วงราชวงศ์</option>
-<option value="theme-luxury">Luxury Black</option>
-</select>
-
-<label>จำนวนคน (1-100)</label>
-<input type="number" id="count" min="1" max="100" value="10">
-
-<button onclick="createForms()">ถัดไป</button>
-</div>
-</div>
-
-<!-- PAGE 3 -->
-<div id="page3" class="page">
-<div class="container">
-<h1>กรอกข้อมูล</h1>
-<div class="progress"><div id="bar" class="progress-bar"></div></div>
-<div id="forms"></div>
-
-<label>คำอวยพร</label>
-<textarea id="message"></textarea>
-
-<button onclick="generate()">สร้างแกลเลอรี่</button>
-</div>
-</div>
-
-<!-- PAGE 4 -->
-<div id="page4" class="page">
-<div class="container">
-<h1>แกลเลอรี่ความทรงจำ</h1>
-
-<input type="text" id="search" placeholder="ค้นหาชื่อ..." onkeyup="filterNames()">
-
-<button onclick="sortAZ()">เรียง A-Z</button>
-<button onclick="sortZA()">เรียง Z-A</button>
-<button onclick="startSlideshow()">สไลด์โชว์</button>
-<button onclick="toggleMusic()">เปิด/ปิด เพลง</button>
-<button onclick="toggleDark()">โหมดมืด</button>
-
-<div id="gallery" class="grid"></div>
-
-<h2 id="finalMessage"></h2>
-<button onclick="location.reload()">เริ่มใหม่</button>
-
-</div>
-</div>
-
-<div id="lightbox" onclick="this.style.display='none'">
-<img id="lightImg">
-</div>
-
-<audio id="music" loop>
-<source src="music.mp3" type="audio/mpeg">
-</audio>
+<canvas id="canvas"></canvas>
+<br>
+<img id="photo">
 
 <script>
-let total=0;
-let data=[];
+    const video = document.getElementById('video');
 
-function go(a,b){
-document.getElementById("page"+a).classList.remove("active");
-document.getElementById("page"+b).classList.add("active");
-}
+    // เปิดกล้อง
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(error => {
+            alert("ไม่สามารถเปิดกล้องได้");
+            console.log(error);
+        });
 
-function createForms(){
-total=document.getElementById("count").value;
-if(total>100) total=100;
+    function takePhoto() {
+        const canvas = document.getElementById('canvas');
+        const photo = document.getElementById('photo');
 
-let f=document.getElementById("forms");
-f.innerHTML="";
-for(let i=1;i<=total;i++){
-f.innerHTML+=`
-<label>ชื่อคนที่ ${i}</label>
-<input type="text" id="name${i}">
-<label>รูปภาพ</label>
-<input type="file" accept="image/*" id="img${i}" onchange="updateBar()">
-`;
-}
-go(2,3);
-}
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
 
-function updateBar(){
-let up=0;
-for(let i=1;i<=total;i++){
-if(document.getElementById("img"+i).files[0]) up++;
-}
-document.getElementById("bar").style.width=(up/total*100)+"%";
-}
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
 
-function generate(){
-document.body.className=document.getElementById("themeSelect").value;
-let gallery=document.getElementById("gallery");
-gallery.innerHTML="";
-data=[];
-
-for(let i=1;i<=total;i++){
-let name=document.getElementById("name"+i).value;
-let file=document.getElementById("img"+i).files[0];
-if(file){
-let reader=new FileReader();
-reader.onload=function(e){
-data.push({name:name,img:e.target.result});
-render();
-}
-reader.readAsDataURL(file);
-}
-}
-
-document.getElementById("finalMessage").innerText=document.getElementById("message").value;
-go(3,4);
-particles();
-confetti();
-}
-
-function render(){
-let gallery=document.getElementById("gallery");
-gallery.innerHTML="";
-data.forEach(d=>{
-gallery.innerHTML+=`
-<div class="card" onclick="openLight('${d.img}')">
-<img src="${d.img}">
-<p>${d.name}</p>
-</div>
-`;
-});
-}
-
-function openLight(src){
-document.getElementById("lightbox").style.display="flex";
-document.getElementById("lightImg").src=src;
-}
-
-function filterNames(){
-let s=document.getElementById("search").value.toLowerCase();
-let filtered=data.filter(d=>d.name.toLowerCase().includes(s));
-let gallery=document.getElementById("gallery");
-gallery.innerHTML="";
-filtered.forEach(d=>{
-gallery.innerHTML+=`
-<div class="card" onclick="openLight('${d.img}')">
-<img src="${d.img}">
-<p>${d.name}</p>
-</div>
-`;
-});
-}
-
-function sortAZ(){
-data.sort((a,b)=>a.name.localeCompare(b.name));
-render();
-}
-
-function sortZA(){
-data.sort((a,b)=>b.name.localeCompare(a.name));
-render();
-}
-
-function startSlideshow(){
-let i=0;
-setInterval(()=>{
-if(data.length>0){
-openLight(data[i].img);
-i=(i+1)%data.length;
-}
-},3000);
-}
-
-function toggleMusic(){
-let m=document.getElementById("music");
-if(m.paused) m.play(); else m.pause();
-}
-
-function toggleDark(){
-document.body.classList.toggle("theme-dark");
-}
-
-function particles(){
-setInterval(()=>{
-let p=document.createElement("div");
-p.className="particle";
-p.innerHTML="✨";
-p.style.left=Math.random()*window.innerWidth+"px";
-p.style.top=window.innerHeight+"px";
-document.body.appendChild(p);
-setTimeout(()=>p.remove(),8000);
-},200);
-}
-
-function confetti(){
-for(let i=0;i<80;i++){
-let c=document.createElement("div");
-c.className="confetti";
-c.style.left=Math.random()*100+"%";
-c.style.background=`hsl(${Math.random()*360},100%,50%)`;
-c.style.animationDuration=2+Math.random()*3+"s";
-document.body.appendChild(c);
-setTimeout(()=>c.remove(),4000);
-}
-}
+        const imageData = canvas.toDataURL('image/png');
+        photo.src = imageData;
+    }
 </script>
 
 </body>
