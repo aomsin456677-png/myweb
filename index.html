@@ -3,84 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>งานปัจฉิมแห่งความทรงจำ 2026</title>
+<title>Luxury Graduation Memory 2026</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Prompt',sans-serif;}
+/* =========================
+   GLOBAL RESET
+========================= */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
+}
 
 body{
-background:#0e0f1a;
-color:white;
+background:#0f0f1a;
+color:#fff;
 overflow-x:hidden;
-}
-
-/* พื้นหลังเคลื่อนไหว */
-body::before{
-content:"";
-position:fixed;
-width:300%;
-height:300%;
-background:linear-gradient(45deg,#141e30,#243b55,#1f1c2c,#302b63);
-background-size:600% 600%;
-animation:พื้นหลัง 18s ease infinite;
-z-index:-2;
-}
-@keyframes พื้นหลัง{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-
-/* หน้า */
-.page{
-display:none;
-min-height:100vh;
-padding:60px 20px;
 transition:0.5s;
 }
-.active{display:block;}
 
-/* กล่องหลัก */
+.hidden{display:none;}
+.page{
+min-height:100vh;
+padding:60px 20px;
+display:none;
+animation:fadeIn 0.8s ease;
+}
+.page.active{display:block;}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* =========================
+   CONTAINER
+========================= */
 .container{
-max-width:1100px;
+max-width:1200px;
 margin:auto;
-background:rgba(255,255,255,0.08);
+background:rgba(255,255,255,0.05);
 backdrop-filter:blur(25px);
 border-radius:30px;
 padding:50px;
-box-shadow:0 30px 80px rgba(0,0,0,0.7);
+box-shadow:0 40px 100px rgba(0,0,0,0.8);
 }
 
-/* หัวข้อ */
+/* =========================
+   TITLES
+========================= */
 h1{
-font-size:40px;
-font-weight:800;
-margin-bottom:25px;
-background:linear-gradient(90deg,#ffffff,#9ecbff);
+font-size:42px;
+font-weight:900;
+margin-bottom:20px;
+background:linear-gradient(90deg,#ffffff,#00f2ff);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
-/* ปุ่ม */
+h2{
+margin:30px 0 10px 0;
+font-weight:700;
+}
+
+/* =========================
+   BUTTONS
+========================= */
 button{
 padding:14px 28px;
 border:none;
 border-radius:40px;
+cursor:pointer;
 background:linear-gradient(90deg,#6a5cff,#00d4ff);
 color:white;
 font-weight:600;
-cursor:pointer;
 transition:0.3s;
-margin-top:15px;
+margin:10px 5px;
 }
 button:hover{
-transform:translateY(-4px);
-box-shadow:0 10px 30px rgba(0,0,0,0.6);
+transform:translateY(-5px);
+box-shadow:0 15px 35px rgba(0,0,0,0.6);
 }
 
-/* อินพุต */
+/* =========================
+   INPUT
+========================= */
 input, select, textarea{
 width:100%;
 padding:14px;
@@ -91,7 +101,11 @@ background:rgba(255,255,255,0.15);
 color:white;
 }
 
-/* แถบความคืบหน้า */
+textarea{min-height:120px;}
+
+/* =========================
+   PROGRESS BAR
+========================= */
 .progress{
 height:8px;
 background:rgba(255,255,255,0.2);
@@ -106,177 +120,326 @@ background:linear-gradient(90deg,#00f2ff,#6a5cff);
 transition:0.4s;
 }
 
-/* กริดแกลเลอรี่ */
+/* =========================
+   GRID GALLERY
+========================= */
 .grid{
 display:grid;
 grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
 gap:25px;
 margin-top:40px;
 }
+
 .card{
 background:rgba(255,255,255,0.1);
 border-radius:20px;
 overflow:hidden;
 transition:0.4s;
+position:relative;
+cursor:pointer;
 }
+
 .card:hover{
-transform:translateY(-10px);
-box-shadow:0 20px 40px rgba(0,0,0,0.7);
+transform:translateY(-10px) scale(1.03);
+box-shadow:0 20px 50px rgba(0,0,0,0.8);
 }
+
 .card img{
 width:100%;
-height:250px;
+height:260px;
 object-fit:cover;
+transition:0.5s;
 }
+
+.card:hover img{
+filter:brightness(1.2) saturate(1.3);
+}
+
 .card p{
 padding:15px;
 font-weight:600;
+text-align:center;
 }
 
-/* อนุภาคลอย */
+/* =========================
+   LIGHTBOX
+========================= */
+#lightbox{
+position:fixed;
+top:0;left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:flex;
+align-items:center;
+justify-content:center;
+display:none;
+z-index:999;
+}
+
+#lightbox img{
+max-width:80%;
+max-height:80%;
+border-radius:20px;
+}
+
+/* =========================
+   THEMES
+========================= */
+.theme-blue{background:linear-gradient(45deg,#141e30,#243b55);}
+.theme-gold{background:linear-gradient(45deg,#1a1a1a,#5c4033);}
+.theme-pink{background:linear-gradient(45deg,#2b1a2f,#a4508b);}
+.theme-rainbow{background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet);}
+.theme-dark{background:#000;}
+.theme-sky{background:linear-gradient(#2193b0,#6dd5ed);}
+.theme-purple{background:linear-gradient(#41295a,#2f0743);}
+.theme-luxury{background:linear-gradient(#000000,#434343);}
+
+/* =========================
+   PARTICLES
+========================= */
 .particle{
 position:fixed;
-font-size:18px;
-animation:ลอย 8s linear infinite;
+font-size:20px;
+animation:float 8s linear infinite;
 }
-@keyframes ลอย{
+@keyframes float{
 from{transform:translateY(0);opacity:1;}
-to{transform:translateY(-800px);opacity:0;}
+to{transform:translateY(-900px);opacity:0;}
 }
 
-/* ธีมเพิ่มเติม */
-.theme-gold{background:linear-gradient(45deg,#1a1a1a,#3b2f2f,#5c4033);}
-.theme-pink{background:linear-gradient(45deg,#2b1a2f,#4e2a84,#a4508b);}
-.theme-blue{background:linear-gradient(45deg,#141e30,#243b55);}
-.theme-rainbow{background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet);}
+/* =========================
+   CONFETTI
+========================= */
+.confetti{
+position:fixed;
+width:8px;
+height:8px;
+background:red;
+animation:fall 4s linear infinite;
+}
+@keyframes fall{
+from{transform:translateY(-50px) rotate(0deg);}
+to{transform:translateY(100vh) rotate(360deg);}
+}
 
-audio{display:none;}
+/* =========================
+   SEARCH BAR
+========================= */
+#search{
+margin-top:20px;
+}
 
+/* =========================
+   RESPONSIVE
+========================= */
 @media(max-width:768px){
 .container{padding:25px;}
 h1{font-size:28px;}
 }
+
 </style>
 </head>
 
 <body>
 
-<!-- หน้า Intro -->
+<!-- PAGE 1 -->
 <div id="page1" class="page active">
 <div class="container">
-<h1>ยินดีต้อนรับสู่งานปัจฉิม 2026</h1>
-<p>สร้างเว็บความทรงจำแบบหรูหราได้ด้วยตัวเอง</p>
-<button onclick="ไปหน้า2()">เริ่มสร้างเว็บ</button>
+<h1>งานปัจฉิมแห่งความทรงจำ 2026</h1>
+<p>สร้างเว็บหรูระดับชาติด้วยตัวเอง</p>
+<button onclick="go(1,2)">เริ่มสร้าง</button>
 </div>
 </div>
 
-<!-- หน้าเลือกธีม -->
+<!-- PAGE 2 -->
 <div id="page2" class="page">
 <div class="container">
-<h1>เลือกธีมของคุณ</h1>
+<h1>ตั้งค่าธีมและจำนวนคน</h1>
+
 <select id="themeSelect">
-<option value="theme-blue">ธีมน้ำเงินหรู</option>
-<option value="theme-gold">ธีมทองคลาสสิก</option>
-<option value="theme-pink">ธีมชมพูอินเตอร์</option>
-<option value="theme-rainbow">ธีมสายรุ้งสดใส</option>
+<option value="theme-blue">น้ำเงินหรู</option>
+<option value="theme-gold">ทองคลาสสิก</option>
+<option value="theme-pink">ชมพูอินเตอร์</option>
+<option value="theme-rainbow">สายรุ้งสดใส</option>
+<option value="theme-dark">ดำมินิมอล</option>
+<option value="theme-sky">ฟ้าพรีเมียม</option>
+<option value="theme-purple">ม่วงราชวงศ์</option>
+<option value="theme-luxury">Luxury Black</option>
 </select>
 
-<label>เลือกจำนวนผู้เข้าร่วม (1-100 คน)</label>
+<label>จำนวนคน (1-100)</label>
 <input type="number" id="count" min="1" max="100" value="10">
 
-<button onclick="ไปหน้า3()">ถัดไป</button>
+<button onclick="createForms()">ถัดไป</button>
 </div>
 </div>
 
-<!-- หน้ากรอกข้อมูล -->
+<!-- PAGE 3 -->
 <div id="page3" class="page">
 <div class="container">
-<h1>กรอกข้อมูลเพื่อน</h1>
+<h1>กรอกข้อมูล</h1>
 <div class="progress"><div id="bar" class="progress-bar"></div></div>
-<div id="formArea"></div>
-<label>ข้อความอวยพร</label>
+<div id="forms"></div>
+
+<label>คำอวยพร</label>
 <textarea id="message"></textarea>
-<button onclick="แสดงผล()">สร้างแกลเลอรี่</button>
+
+<button onclick="generate()">สร้างแกลเลอรี่</button>
 </div>
 </div>
 
-<!-- หน้าแสดงผล -->
+<!-- PAGE 4 -->
 <div id="page4" class="page">
 <div class="container">
-<h1>ความทรงจำของพวกเรา</h1>
+<h1>แกลเลอรี่ความทรงจำ</h1>
+
+<input type="text" id="search" placeholder="ค้นหาชื่อ..." onkeyup="filterNames()">
+
+<button onclick="sortAZ()">เรียง A-Z</button>
+<button onclick="sortZA()">เรียง Z-A</button>
+<button onclick="startSlideshow()">สไลด์โชว์</button>
+<button onclick="toggleMusic()">เปิด/ปิด เพลง</button>
+<button onclick="toggleDark()">โหมดมืด</button>
+
 <div id="gallery" class="grid"></div>
-<h2 id="finalMessage" style="margin-top:40px;"></h2>
-<button onclick="location.reload()">สร้างใหม่อีกครั้ง</button>
-<button onclick="เปิดเพลง()">เปิด / ปิด เพลง</button>
+
+<h2 id="finalMessage"></h2>
+<button onclick="location.reload()">เริ่มใหม่</button>
+
 </div>
 </div>
 
-<audio id="bgmusic" loop>
+<div id="lightbox" onclick="this.style.display='none'">
+<img id="lightImg">
+</div>
+
+<audio id="music" loop>
 <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 let total=0;
+let data=[];
 
-function ไปหน้า2(){
-เปลี่ยนหน้า(1,2);
+function go(a,b){
+document.getElementById("page"+a).classList.remove("active");
+document.getElementById("page"+b).classList.add("active");
 }
 
-function ไปหน้า3(){
+function createForms(){
 total=document.getElementById("count").value;
 if(total>100) total=100;
-let area=document.getElementById("formArea");
-area.innerHTML="";
+
+let f=document.getElementById("forms");
+f.innerHTML="";
 for(let i=1;i<=total;i++){
-area.innerHTML+=`
+f.innerHTML+=`
 <label>ชื่อคนที่ ${i}</label>
 <input type="text" id="name${i}">
-<label>อัปโหลดรูปภาพ</label>
-<input type="file" accept="image/*" id="img${i}" onchange="อัปเดตแถบ()">
+<label>รูปภาพ</label>
+<input type="file" accept="image/*" id="img${i}" onchange="updateBar()">
 `;
 }
-เปลี่ยนหน้า(2,3);
+go(2,3);
 }
 
-function อัปเดตแถบ(){
-let uploaded=0;
+function updateBar(){
+let up=0;
 for(let i=1;i<=total;i++){
-if(document.getElementById("img"+i).files[0]) uploaded++;
+if(document.getElementById("img"+i).files[0]) up++;
 }
-document.getElementById("bar").style.width=(uploaded/total*100)+"%";
+document.getElementById("bar").style.width=(up/total*100)+"%";
 }
 
-function แสดงผล(){
+function generate(){
 document.body.className=document.getElementById("themeSelect").value;
 let gallery=document.getElementById("gallery");
 gallery.innerHTML="";
+data=[];
+
 for(let i=1;i<=total;i++){
 let name=document.getElementById("name"+i).value;
 let file=document.getElementById("img"+i).files[0];
 if(file){
 let reader=new FileReader();
 reader.onload=function(e){
-gallery.innerHTML+=`
-<div class="card">
-<img src="${e.target.result}">
-<p>✨ ${name}</p>
-</div>
-`;
+data.push({name:name,img:e.target.result});
+render();
 }
 reader.readAsDataURL(file);
 }
 }
+
 document.getElementById("finalMessage").innerText=document.getElementById("message").value;
-เปลี่ยนหน้า(3,4);
-เริ่มเอฟเฟกต์();
+go(3,4);
+particles();
+confetti();
 }
 
-function เปลี่ยนหน้า(a,b){
-document.getElementById("page"+a).classList.remove("active");
-document.getElementById("page"+b).classList.add("active");
+function render(){
+let gallery=document.getElementById("gallery");
+gallery.innerHTML="";
+data.forEach(d=>{
+gallery.innerHTML+=`
+<div class="card" onclick="openLight('${d.img}')">
+<img src="${d.img}">
+<p>${d.name}</p>
+</div>
+`;
+});
 }
 
-function เริ่มเอฟเฟกต์(){
+function openLight(src){
+document.getElementById("lightbox").style.display="flex";
+document.getElementById("lightImg").src=src;
+}
+
+function filterNames(){
+let s=document.getElementById("search").value.toLowerCase();
+let filtered=data.filter(d=>d.name.toLowerCase().includes(s));
+let gallery=document.getElementById("gallery");
+gallery.innerHTML="";
+filtered.forEach(d=>{
+gallery.innerHTML+=`
+<div class="card" onclick="openLight('${d.img}')">
+<img src="${d.img}">
+<p>${d.name}</p>
+</div>
+`;
+});
+}
+
+function sortAZ(){
+data.sort((a,b)=>a.name.localeCompare(b.name));
+render();
+}
+
+function sortZA(){
+data.sort((a,b)=>b.name.localeCompare(a.name));
+render();
+}
+
+function startSlideshow(){
+let i=0;
+setInterval(()=>{
+if(data.length>0){
+openLight(data[i].img);
+i=(i+1)%data.length;
+}
+},3000);
+}
+
+function toggleMusic(){
+let m=document.getElementById("music");
+if(m.paused) m.play(); else m.pause();
+}
+
+function toggleDark(){
+document.body.classList.toggle("theme-dark");
+}
+
+function particles(){
 setInterval(()=>{
 let p=document.createElement("div");
 p.className="particle";
@@ -288,10 +451,16 @@ setTimeout(()=>p.remove(),8000);
 },200);
 }
 
-function เปิดเพลง(){
-let music=document.getElementById("bgmusic");
-if(music.paused){music.play();}
-else{music.pause();}
+function confetti(){
+for(let i=0;i<80;i++){
+let c=document.createElement("div");
+c.className="confetti";
+c.style.left=Math.random()*100+"%";
+c.style.background=`hsl(${Math.random()*360},100%,50%)`;
+c.style.animationDuration=2+Math.random()*3+"s";
+document.body.appendChild(c);
+setTimeout(()=>c.remove(),4000);
+}
 }
 </script>
 
