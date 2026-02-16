@@ -2,265 +2,168 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MemoryGram Ultra Max 2026</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>iPad Smart Notebook</title>
 
 <style>
-
-/* ================= GLOBAL RESET ================= */
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Prompt',sans-serif;
-}
-
 body{
-background:#0f0f1a;
-color:white;
-overflow-x:hidden;
-transition:0.4s;
+margin:0;
+overflow:hidden;
+font-family:Arial;
+background:#f5f5f5;
 }
 
-/* Animated Gradient Background */
-body::before{
-content:"";
+#toolbar{
 position:fixed;
-width:300%;
-height:300%;
-background:linear-gradient(45deg,#141e30,#243b55,#1f1c2c,#302b63);
-background-size:600% 600%;
-animation:bgMove 18s ease infinite;
-z-index:-2;
-}
-
-@keyframes bgMove{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-
-/* Glass Container */
-.glass{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(20px);
-border-radius:20px;
-box-shadow:0 20px 50px rgba(0,0,0,0.6);
-padding:20px;
-}
-
-/* Buttons */
-button{
-padding:8px 16px;
-border:none;
-border-radius:20px;
-background:linear-gradient(90deg,#6a5cff,#00f2ff);
-color:white;
-cursor:pointer;
-transition:0.3s;
-}
-button:hover{
-transform:translateY(-3px);
-box-shadow:0 10px 25px rgba(0,0,0,0.6);
-}
-
-/* Inputs */
-input, textarea, select{
-width:100%;
-padding:8px;
-border-radius:10px;
-border:none;
-margin:5px 0;
-background:rgba(255,255,255,0.15);
-color:white;
-}
-
-/* Header */
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 30px;
-position:sticky;
 top:0;
-z-index:100;
-background:rgba(0,0,0,0.3);
-backdrop-filter:blur(20px);
-}
-
-/* Layout */
-.container{
-max-width:800px;
-margin:20px auto;
-padding:10px;
-}
-
-/* Hidden */
-.hidden{display:none;}
-
-/* Posts */
-.post{
-margin-bottom:20px;
-overflow:hidden;
-border-radius:20px;
-}
-
-.post img{
-width:100%;
-max-height:400px;
-object-fit:cover;
-}
-
-.post-content{
-padding:15px;
-}
-
-.like{
-cursor:pointer;
-margin-top:5px;
-}
-
-/* Stories */
-.story-bar{
+left:0;
+right:0;
+height:60px;
+background:white;
 display:flex;
+align-items:center;
 gap:10px;
-overflow-x:auto;
-margin-bottom:15px;
+padding:10px;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+z-index:10;
 }
 
-.story{
-width:70px;
-height:70px;
-border-radius:50%;
-border:3px solid #6a5cff;
-overflow:hidden;
-cursor:pointer;
+button{
+padding:8px 12px;
+border:none;
+border-radius:8px;
+background:#4f46e5;
+color:white;
+font-size:14px;
 }
 
-.story img{
-width:100%;
-height:100%;
-object-fit:cover;
+input[type="color"],
+input[type="range"],
+select{
+height:35px;
 }
 
-/* Profile */
-.profile{
-text-align:center;
-margin-bottom:20px;
+canvas{
+position:absolute;
+top:60px;
+left:0;
 }
-
-.profile img{
-width:100px;
-height:100px;
-border-radius:50%;
-object-fit:cover;
-margin-bottom:10px;
-}
-
-/* Chat */
-.chat-box{
-position:fixed;
-bottom:0;
-right:20px;
-width:300px;
-height:400px;
-display:none;
-flex-direction:column;
-background:#111;
-border-radius:20px 20px 0 0;
-}
-
-/* Notification */
-.notification{
-position:fixed;
-top:20px;
-right:20px;
-background:red;
-padding:10px 15px;
-border-radius:10px;
-display:none;
-}
-
-/* Particles */
-.particle{
-position:fixed;
-font-size:20px;
-animation:float 8s linear infinite;
-}
-
-@keyframes float{
-from{transform:translateY(0);opacity:1;}
-to{transform:translateY(-900px);opacity:0;}
-}
-
-.dark{
-background:#000;
-}
-
 </style>
 </head>
-
 <body>
 
-<!-- AUTH PAGE -->
-<div id="authPage" class="container glass">
-<h2>เข้าสู่ระบบ / สมัครสมาชิก</h2>
-<input type="text" id="authUser" placeholder="ชื่อผู้ใช้">
-<input type="password" id="authPass" placeholder="รหัสผ่าน">
-<button onclick="register()">สมัครสมาชิก</button>
-<button onclick="login()">เข้าสู่ระบบ</button>
+<div id="toolbar">
+<input type="color" id="colorPicker" value="#000000">
+<input type="range" id="size" min="1" max="20" value="3">
+<button onclick="setMode('draw')">✏ ปากกา</button>
+<button onclick="setMode('erase')">🧽 ยางลบ</button>
+<button onclick="clearCanvas()">🗑 ล้าง</button>
+<button onclick="saveImage()">💾 บันทึก</button>
+<select id="paperType" onchange="changePaper()">
+<option value="plain">กระดาษเปล่า</option>
+<option value="line">กระดาษเส้น</option>
+<option value="grid">กระดาษตาราง</option>
+</select>
 </div>
 
-<!-- MAIN APP -->
-<div id="app" class="hidden">
-
-<header>
-<h3>MemoryGram Ultra</h3>
-<div>
-<button onclick="toggleDark()">🌙</button>
-<button onclick="logout()">ออก</button>
-</div>
-</header>
-
-<div class="container">
-
-<div id="profileSection" class="profile glass"></div>
-
-<div class="story-bar" id="stories"></div>
-
-<div class="glass">
-<h4>สร้างโพสต์ใหม่</h4>
-<input type="file" id="postImg">
-<textarea id="caption" placeholder="เขียนแคปชัน"></textarea>
-<button onclick="addPost()">โพสต์</button>
-</div>
-
-<div id="feed"></div>
-
-</div>
-</div>
-
-<div class="notification" id="notif">แจ้งเตือนใหม่!</div>
+<canvas id="canvas"></canvas>
 
 <script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-/* ================= DATA ================= */
+let drawing = false;
+let mode = "draw";
 
-let users = JSON.parse(localStorage.getItem("users")) || [];
-let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
-let stories = JSON.parse(localStorage.getItem("stories")) || [];
-let followers = JSON.parse(localStorage.getItem("followers")) || [];
-let chats = JSON.parse(localStorage.getItem("chats")) || [];
-
-function saveAll(){
-localStorage.setItem("users",JSON.stringify(users));
-localStorage.setItem("currentUser",JSON.stringify(currentUser));
-localStorage.setItem("posts",JSON.stringify(posts));
-localStorage.setItem("stories",JSON.stringify(stories));
-localStorage.setItem("followers",JSON.stringify(followers));
-localStorage.setItem("chats",JSON.stringify(chats));
+function resizeCanvas(){
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight - 60;
+changePaper();
 }
+resizeCanvas();
+window.onresize = resizeCanvas;
+
+canvas.addEventListener("pointerdown", e=>{
+drawing = true;
+draw(e);
+});
+canvas.addEventListener("pointermove", draw);
+canvas.addEventListener("pointerup", ()=>drawing=false);
+canvas.addEventListener("pointerout", ()=>drawing=false);
+
+function draw(e){
+if(!drawing) return;
+
+let rect = canvas.getBoundingClientRect();
+let x = e.clientX - rect.left;
+let y = e.clientY - rect.top;
+
+ctx.lineCap = "round";
+ctx.lineJoin = "round";
+
+if(mode === "erase"){
+ctx.globalCompositeOperation = "destination-out";
+ctx.lineWidth = 20;
+}else{
+ctx.globalCompositeOperation = "source-over";
+ctx.strokeStyle = document.getElementById("colorPicker").value;
+ctx.lineWidth = document.getElementById("size").value * (e.pressure || 1);
+}
+
+ctx.lineTo(x,y);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(x,y);
+}
+
+function setMode(m){
+mode = m;
+}
+
+function clearCanvas(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+changePaper();
+}
+
+function saveImage(){
+let link = document.createElement("a");
+link.download = "โน้ต.png";
+link.href = canvas.toDataURL();
+link.click();
+}
+
+function changePaper(){
+let type = document.getElementById("paperType").value;
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+if(type === "line"){
+ctx.strokeStyle = "#ddd";
+for(let i=20;i<canvas.height;i+=30){
+ctx.beginPath();
+ctx.moveTo(0,i);
+ctx.lineTo(canvas.width,i);
+ctx.stroke();
+}
+}
+
+if(type === "grid"){
+ctx.strokeStyle = "#eee";
+for(let i=20;i<canvas.height;i+=25){
+ctx.beginPath();
+ctx.moveTo(0,i);
+ctx.lineTo(canvas.width,i);
+ctx.stroke();
+}
+for(let j=20;j<canvas.width;j+=25){
+ctx.beginPath();
+ctx.moveTo(j,0);
+ctx.lineTo(j,canvas.height);
+ctx.stroke();
+}
+}
+}
+
+</script>
+
+</body>
+</html>
